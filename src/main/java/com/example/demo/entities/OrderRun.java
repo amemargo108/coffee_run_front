@@ -25,4 +25,8 @@ public class OrderRun {
 
     private String departmentCode;
     private LocalDateTime pulledAt;
+
+    @ManyToOne
+    @JoinColumn(name = "runner_id")
+    private Employee runner;
 }

@@ -23,4 +23,8 @@ public class OrderSelection {
     @JoinColumn(name = "preferred_order_id")
     private PreferredOrder preferredOrder;
 
+    @ManyToOne
+    @JoinColumn(name = "menu_option_id")
+    private MenuOption menuOption;
+
 }

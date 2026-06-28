@@ -10,4 +10,5 @@ import java.util.UUID;
 public interface PreferredOrderRepository extends JpaRepository<PreferredOrder, UUID> {
     Optional<PreferredOrder> findByEmployeeIdAndCoffeeShopId(UUID employeeId, UUID coffeeShopId);
     List<PreferredOrder> findByEmployeeDepartmentCode(String departmentCode);
+    List<PreferredOrder> findByEmployeeDepartmentCodeAndCoffeeShopId(String departmentCode, UUID coffeeShopId);
 }
