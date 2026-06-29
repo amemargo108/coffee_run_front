@@ -38,6 +38,11 @@ public class ReportService {
     }
 
     @PreAuthorize("hasRole('ADMIN')")
+    public List<OrderRun> getRunsByDepartmentAndDateRange(String departmentId, LocalDateTime start, LocalDateTime end) {
+        return orderRunRepository.findByDepartmentCodeAndPulledAtBetween(departmentId, start, end);
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
     public List<OrderRun> getRunsByRunnerAndDateRange(UUID runnerId, LocalDateTime start, LocalDateTime end) {
         return orderRunRepository.findByRunnerIdAndPulledAtBetween(runnerId, start, end);
     }

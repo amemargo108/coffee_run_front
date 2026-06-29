@@ -5,7 +5,9 @@ import com.example.demo.entities.Employee;
 import com.example.demo.repository.EmployeeRepository;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.stereotype.Service;
 
+@Service
 // this service is for handling login
 public class AuthService {
 
