@@ -1,2 +1,22 @@
 /* You can add global styles to this file, and also import other style files */
 @import "tailwindcss";
+
+.dark-green {
+    background-color: #2F5952;
+}
+
+.mid-green {
+    background-color: #4a8c86;
+}
+
+.barrio-regular {
+  font-family: "Barrio", system-ui;
+  font-weight: 400;
+  font-style: normal;
+}
+
+.chela {
+  font-family: "Chela One", system-ui;
+  font-weight: 400;
+  font-style: normal;
+}
