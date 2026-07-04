@@ -5,21 +5,15 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="280adb57-4e9d-4f51-8da6-ad6538830a66" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/demo/controllers/OrderRunController.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/demo/controllers/PreferredOrderController.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/demo/controllers/ReportController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/demo/dtos/CreateEmployee.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/demo/dtos/EmployeeResponse.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/demo/dtos/LoginRequest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/demo/dtos/OrderRunItemResponse.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/demo/dtos/OrderRunResponse.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/demo/dtos/PreferredOrderResponse.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/test/java/com/example/demo/services/PreferredOrderServiceTest.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/demo/repository/OrderRunItemRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/demo/repository/OrderRunItemRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/demo/security/SecurityConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/demo/security/SecurityConfig.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/demo/services/AuthService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/demo/services/AuthService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/demo/services/EmployeeDetailsService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/demo/services/EmployeeDetailsService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/demo/services/ReportService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/demo/services/ReportService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/application.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/application-local.properties" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/application-local.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/application.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/demo/entities/Employee.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/example/demo/entities/Employee.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/demo/entities/OrderSelection.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/example/demo/entities/OrderSelection.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/demo/repository/EmployeeRepository.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/example/demo/repository/EmployeeRepository.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/demo/controllers/AuthController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/demo/controllers/AuthController.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -68,6 +62,8 @@
   "keyToString": {
     "Application.coffee_run.executor": "Run",
     "Gradle./Users/amemargo/IdeaProjects/capstone/build.gradle.executor": "Run",
+    "JUnit.PreferredOrderServiceTest.saveOrUpdate_createsNewOrder_whenNoneExists.executor": "Run",
+    "JUnit.PreferredOrderServiceTest.saveOrUpdate_updatesExistingOrder_whenOneExists.executor": "Run",
     "ModuleVcsDetector.initialDetectionPerformed": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
@@ -79,7 +75,7 @@
     "project.structure.last.edited": "Modules",
     "project.structure.proportion": "0.15",
     "project.structure.side.proportion": "0.2",
-    "settings.editor.selected.configurable": "preferences.keymap"
+    "settings.editor.selected.configurable": "reference.settingsdialog.IDE.editor.colors.Java"
   },
   "keyToStringList": {
     "DatabaseDriversLRU": [
@@ -95,7 +91,7 @@
       <recent name="$PROJECT_DIR$" />
     </key>
   </component>
-  <component name="RunManager">
+  <component name="RunManager" selected="JUnit.PreferredOrderServiceTest.saveOrUpdate_updatesExistingOrder_whenOneExists">
     <configuration name="coffee_run" type="Application" factoryName="Application">
       <envs>
         <env name="DB_PASSWORD" value="secret" />
@@ -109,6 +105,49 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+    <configuration name="PreferredOrderServiceTest.saveOrUpdate_createsNewOrder_whenNoneExists" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="demo" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.example.demo.services.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="com.example.demo.services" />
+      <option name="MAIN_CLASS_NAME" value="com.example.demo.services.PreferredOrderServiceTest" />
+      <option name="METHOD_NAME" value="saveOrUpdate_createsNewOrder_whenNoneExists" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="PreferredOrderServiceTest.saveOrUpdate_updatesExistingOrder_whenOneExists" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="demo" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.example.demo.services.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="com.example.demo.services" />
+      <option name="MAIN_CLASS_NAME" value="com.example.demo.services.PreferredOrderServiceTest" />
+      <option name="METHOD_NAME" value="saveOrUpdate_updatesExistingOrder_whenOneExists" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <list>
+      <item itemvalue="Application.coffee_run" />
+      <item itemvalue="JUnit.PreferredOrderServiceTest.saveOrUpdate_createsNewOrder_whenNoneExists" />
+      <item itemvalue="JUnit.PreferredOrderServiceTest.saveOrUpdate_updatesExistingOrder_whenOneExists" />
+    </list>
+    <recent_temporary>
+      <list>
+        <item itemvalue="JUnit.PreferredOrderServiceTest.saveOrUpdate_updatesExistingOrder_whenOneExists" />
+        <item itemvalue="JUnit.PreferredOrderServiceTest.saveOrUpdate_createsNewOrder_whenNoneExists" />
+      </list>
+    </recent_temporary>
   </component>
   <component name="SharedIndexes">
     <attachedChunks>
@@ -126,6 +165,17 @@
       <updated>1781922889554</updated>
     </task>
     <servers />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/test/java/com/example/demo/services/PreferredOrderServiceTest.java</url>
+          <line>81</line>
+          <option name="timeStamp" value="2" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />
