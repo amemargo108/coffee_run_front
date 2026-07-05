@@ -1,8 +1,11 @@
 package com.example.demo.controllers;
 
+import com.example.demo.dtos.OrderRunItemResponse;
+import com.example.demo.dtos.OrderRunResponse;
 import com.example.demo.entities.OrderRun;
 import com.example.demo.entities.OrderRunItem;
 import com.example.demo.services.OrderRunService;
+import org.apache.coyote.Response;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,18 +23,25 @@ public class OrderRunController {
     }
 
     @PostMapping("/runner/{runnerId}/shop/{coffeeShopId}/department/{departmentCode}")
-    public ResponseEntity<OrderRun> pullOrderList(@PathVariable UUID runnerId, @PathVariable UUID coffeeShopId, @PathVariable String departmentCode) {
-        return ResponseEntity.ok(orderRunService.pullOrderList(runnerId, coffeeShopId, departmentCode));
+    public ResponseEntity<OrderRunResponse> pullOrderList(@PathVariable UUID runnerId, @PathVariable UUID coffeeShopId, @PathVariable String departmentCode) {
+        OrderRun run = orderRunService.pullOrderList(runnerId, coffeeShopId, departmentCode);
+        List<OrderRunItemResponse> items = orderRunService.getItemsForRun(run.getId())
+                .stream().map(OrderRunItemResponse::from).toList();
+        return ResponseEntity.ok(OrderRunResponse.from(run, items));
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<OrderRun> getRunById(@PathVariable UUID id) {
-        return ResponseEntity.ok(orderRunService.getRunById(id));
+    public ResponseEntity<OrderRunResponse> getRunById(@PathVariable UUID id) {
+        OrderRun run = orderRunService.getRunById(id);
+        List<OrderRunItemResponse> items = orderRunService.getItemsForRun(id).stream()
+                .map(OrderRunItemResponse::from).toList();
+        return ResponseEntity.ok(OrderRunResponse.from(run, items));
     }
 
     @GetMapping("/{id}/items")
-    public ResponseEntity<List<OrderRunItem>> getItemsForRun(@PathVariable UUID id) {
-        return ResponseEntity.ok(orderRunService.getItemsForRun(id));
+    public ResponseEntity<List<OrderRunItemResponse>> getItemsForRun(@PathVariable UUID id) {
+       return ResponseEntity.ok(orderRunService.getItemsForRun(id).stream()
+               .map(OrderRunItemResponse::from).toList());
     }
 
 }

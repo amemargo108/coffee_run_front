@@ -1,5 +1,7 @@
 package com.example.demo.controllers;
 
+import com.example.demo.dtos.OrderRunItemResponse;
+import com.example.demo.dtos.OrderRunResponse;
 import com.example.demo.entities.OrderRun;
 import com.example.demo.entities.OrderRunItem;
 import com.example.demo.services.ReportService;
@@ -22,41 +24,52 @@ public class ReportController {
     }
 
     @GetMapping("/runner/{runnerId}")
-    public ResponseEntity<List<OrderRun>> getByRunner(@PathVariable UUID runnerId) {
-        return ResponseEntity.ok(reportService.getRunsByRunner(runnerId));
+    public ResponseEntity<List<OrderRunResponse>> getByRunner(@PathVariable UUID runnerId) {
+        return ResponseEntity.ok(reportService.getRunsByRunner(runnerId).stream()
+                .map(run -> OrderRunResponse.from(run, getItems(run))).toList());
     }
 
     @GetMapping("/department/{departmentCode}")
-    public ResponseEntity<List<OrderRun>> getByDepartment(@PathVariable String departmentCode) {
-        return ResponseEntity.ok(reportService.getRunsByDepartment(departmentCode));
+    public ResponseEntity<List<OrderRunResponse>> getByDepartment(@PathVariable String departmentCode) {
+        return ResponseEntity.ok(reportService.getRunsByDepartment(departmentCode).stream()
+                .map(run -> OrderRunResponse.from(run, getItems(run))).toList());
     }
 
     @GetMapping("/date-range")
-    public ResponseEntity<List<OrderRun>> getByDateRange(
+    public ResponseEntity<List<OrderRunResponse>> getByDateRange(
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime start,
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime end) {
-        return ResponseEntity.ok(reportService.getRunsByDateRange(start, end));
+        return ResponseEntity.ok(reportService.getRunsByDateRange(start, end).stream()
+                .map(run -> OrderRunResponse.from(run, getItems(run))).toList());
     }
 
     @GetMapping("/runner/{runnerId}/date-range")
-    public ResponseEntity<List<OrderRun>> getByRunnerAndDateRange(
+    public ResponseEntity<List<OrderRunResponse>> getByRunnerAndDateRange(
             @PathVariable UUID runnerId,
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime start,
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime end) {
-        return ResponseEntity.ok(reportService.getRunsByRunnerAndDateRange(runnerId, start, end));
+        return ResponseEntity.ok(reportService.getRunsByRunnerAndDateRange(runnerId, start, end).stream()
+                .map(run -> OrderRunResponse.from(run, getItems(run))).toList());
     }
 
     @GetMapping("/department/{departmentCode}/date-range")
-    public ResponseEntity<List<OrderRun>> getByDepartmentAndDateRange(
+    public ResponseEntity<List<OrderRunResponse>> getByDepartmentAndDateRange(
             @PathVariable String departmentCode,
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime start,
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime end) {
-        return ResponseEntity.ok(reportService.getRunsByDepartmentAndDateRange(departmentCode, start, end));
+        return ResponseEntity.ok(reportService.getRunsByDepartmentAndDateRange(departmentCode, start, end).stream()
+                .map(run -> OrderRunResponse.from(run, getItems(run))).toList());
     }
 
     @GetMapping("/runs/{orderRunId}/items")
-    public ResponseEntity<List<OrderRunItem>> getItemsForRun(@PathVariable UUID orderRunId) {
-        return ResponseEntity.ok(reportService.getItemsForRun(orderRunId));
+    public ResponseEntity<List<OrderRunItemResponse>> getItemsForRun(@PathVariable UUID orderRunId) {
+        return ResponseEntity.ok(reportService.getItemsForRun(orderRunId).stream()
+                .map(OrderRunItemResponse::from).toList());
+    }
+
+    private List<OrderRunItemResponse> getItems(OrderRun run) {
+        return reportService.getItemsForRun(run.getId()).stream()
+                .map(OrderRunItemResponse::from).toList();
     }
 
 }

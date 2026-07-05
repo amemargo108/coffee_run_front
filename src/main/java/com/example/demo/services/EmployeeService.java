@@ -1,11 +1,12 @@
 package com.example.demo.services;
 
+import com.example.demo.entities.Department;
 import com.example.demo.entities.Employee;
 import com.example.demo.repository.EmployeeRepository;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.parameters.P;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import com.example.demo.repository.DepartmentRepository;
 
 import java.util.List;
 import java.util.UUID;
@@ -14,10 +15,12 @@ import java.util.UUID;
 public class EmployeeService {
     private final EmployeeRepository employeeRepository;
     private final PasswordEncoder passwordEncoder;
+    private final DepartmentRepository departmentRepository;
 
-    public EmployeeService(EmployeeRepository employeeRepository, PasswordEncoder passwordEncoder) {
+    public EmployeeService(EmployeeRepository employeeRepository, PasswordEncoder passwordEncoder, DepartmentRepository departmentRepository) {
         this.employeeRepository = employeeRepository;
         this.passwordEncoder = passwordEncoder;
+        this.departmentRepository = departmentRepository;
     }
 
     public List<Employee> getByDepartment(String departmentCode) {
@@ -25,7 +28,9 @@ public class EmployeeService {
     }
     //this allows the admins to set up employees initial password
     @PreAuthorize("hasRole('ADMIN')")
-    public Employee create(Employee employee) {
+    public Employee create(Employee employee, String departmentCode) {
+        Department department = departmentRepository.findById(departmentCode).orElseThrow(() -> new RuntimeException("This department could not be found: " + departmentCode));
+        employee.setDepartment(department);
         employee.setPassword(passwordEncoder.encode(employee.getPassword()));
         return employeeRepository.save(employee);
     }
