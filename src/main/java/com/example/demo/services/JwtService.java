@@ -1,5 +1,6 @@
 package com.example.demo.services;
 
+import com.example.demo.entities.Employee;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -22,8 +23,12 @@ public class JwtService {
     private static final long EXPIRATION_TIME = 1000 * 60 * 60 * 24;
 
     public String generateToken(UserDetails userDetails) {
+        Employee employee = (Employee) userDetails;
         Map<String, Object> claims = new HashMap<>();
         //this starts building the token and adding claims to it (claims are just extra bits of info I am embedding in the token
+        claims.put("isAdmin", employee.getIs_admin());
+        claims.put("employeeId", employee.getId().toString());
+        claims.put("departmentCode", employee.getDepartment().getCode());
         return Jwts.builder()
                 .setClaims(claims)
                 //this is how I'm storing the email in the token
