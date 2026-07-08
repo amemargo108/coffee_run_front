@@ -32,10 +32,18 @@ export class AuthService {
         return localStorage.getItem(this.tokenKey);
     }
 
+    /* FIX ME: Put this one back once ready
     isLoggedIn(): boolean {
         const token = this.getToken();
         if (!token) return false;
         return !this.isTokenExpired(token);
+    }
+    */
+
+    /*this is allowing me to see it temporarily without a login*/
+    isLoggedIn(): boolean {
+        const token = this.getToken();
+        return !!token;
     }
 
     isAdmin(): boolean {
