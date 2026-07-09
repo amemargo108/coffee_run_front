@@ -1,1 +1,59 @@
-<p>runner works!</p>
+<div class="dark-green min-h-screen p-8">
+
+  <!-- Header -->
+  <div class="flex justify-between items-center mb-10">
+    <h1 class="text-4xl font-bold text-orange-100 barrio-regular">Runner View</h1>
+    <button (click)="goBack()" class="text-orange-100 chela hover:text-orange-300 transition duration-200">
+      ← Back
+    </button>
+  </div>
+
+  <p *ngIf="errorMessage" class="text-red-300 chela mb-4">{{ errorMessage }}</p>
+
+  <!-- Shop selector -->
+  <div class="mb-8">
+    <h2 class="text-orange-100 chela text-xl mb-4">Select a coffee shop:</h2>
+    <div class="flex flex-wrap gap-3">
+      <button *ngFor="let shop of coffeeShops"
+        (click)="selectShop(shop)"
+        [class.bg-red-900]="selectedShop?.id === shop.id"
+        [class.bg-orange-100]="selectedShop?.id !== shop.id"
+        [class.text-orange-100]="selectedShop?.id === shop.id"
+        [class.text-red-900]="selectedShop?.id !== shop.id"
+        class="px-4 py-2 rounded-lg chela transition duration-200">
+        {{ shop.name }}
+      </button>
+    </div>
+  </div>
+
+  <!-- Pull button -->
+  <div *ngIf="selectedShop" class="mb-8">
+    <p class="text-orange-100 chela mb-4">
+      Pulling orders for <strong>{{ departmentCode }}</strong> from <strong>{{ selectedShop.name }}</strong>
+    </p>
+    <button (click)="pullList()" [disabled]="isPulling"
+      class="bg-red-900 hover:bg-red-800 text-orange-100 chela py-2 px-6 rounded-lg transition duration-200">
+      {{ isPulling ? 'Pulling...' : 'Pull Order List' }}
+    </button>
+  </div>
+
+  <!-- Order list -->
+  <div *ngIf="currentRun">
+    <h2 class="text-orange-100 barrio-regular text-2xl mb-6">
+      Order List — {{ currentRun.coffeeShopName }}
+    </h2>
+
+    <div *ngIf="currentRun.items.length === 0" class="text-orange-100 chela">
+      No orders found for this department at this shop.
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div *ngFor="let item of currentRun.items"
+        class="mid-green rounded-xl p-6 shadow-lg">
+        <h3 class="text-orange-100 barrio-regular text-lg mb-2">{{ item.employeeName }}</h3>
+        <p class="text-orange-100 chela">{{ item.orderSummary }}</p>
+      </div>
+    </div>
+  </div>
+
+</div>

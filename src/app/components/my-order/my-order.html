@@ -1,1 +1,65 @@
-<p>my-order works!</p>
+<div class="dark-green min-h-screen p-8">
+
+  <!-- Header -->
+  <div class="flex justify-between items-center mb-10">
+    <h1 class="text-4xl font-bold text-orange-100 barrio-regular">My Order</h1>
+    <button (click)="goBack()" class="text-orange-100 chela hover:text-orange-300 transition duration-200">
+      ← Back
+    </button>
+  </div>
+
+  <!-- Messages -->
+  <p *ngIf="successMessage" class="text-green-300 chela mb-4">{{ successMessage }}</p>
+  <p *ngIf="errorMessage" class="text-red-300 chela mb-4">{{ errorMessage }}</p>
+
+  <!-- Shop selector -->
+  <div class="mb-8">
+    <h2 class="text-orange-100 chela text-xl mb-4">Select a coffee shop:</h2>
+    <div class="flex flex-wrap gap-3">
+      <button *ngFor="let shop of coffeeShops"
+        (click)="selectShop(shop)"
+        [class.bg-red-900]="selectedShop?.id === shop.id"
+        [class.bg-orange-100]="selectedShop?.id !== shop.id"
+        [class.text-orange-100]="selectedShop?.id === shop.id"
+        [class.text-red-900]="selectedShop?.id !== shop.id"
+        class="px-4 py-2 rounded-lg chela transition duration-200">
+        {{ shop.name }}
+      </button>
+    </div>
+  </div>
+
+  <!-- Loading -->
+  <p *ngIf="isLoading" class="text-orange-100 chela">Loading menu...</p>
+
+  <!-- Menu options -->
+  <div *ngIf="selectedShop && !isLoading">
+    <div *ngFor="let category of categories" class="mb-6">
+      <h3 class="text-orange-100 barrio-regular text-lg mb-3 capitalize">{{ category }}</h3>
+      <div class="flex flex-wrap gap-3">
+        <button *ngFor="let option of getOptionsByCategory(category)"
+          (click)="toggleOption(option.id)"
+          [class.bg-red-900]="isSelected(option.id)"
+          [class.bg-orange-100]="!isSelected(option.id)"
+          [class.text-orange-100]="isSelected(option.id)"
+          [class.text-red-900]="!isSelected(option.id)"
+          class="px-4 py-2 rounded-lg chela transition duration-200">
+          {{ option.name }}
+        </button>
+      </div>
+    </div>
+
+    <!-- Actions -->
+    <div class="flex gap-4 mt-8">
+      <button (click)="saveOrder()" [disabled]="isSaving"
+        class="bg-red-900 hover:bg-red-800 text-orange-100 chela py-2 px-6 rounded-lg transition duration-200">
+        {{ isSaving ? 'Saving...' : currentOrder ? 'Update Order' : 'Save Order' }}
+      </button>
+
+      <button *ngIf="currentOrder" (click)="deleteOrder()"
+        class="bg-orange-100 hover:bg-orange-200 text-red-900 chela py-2 px-6 rounded-lg transition duration-200">
+        Delete Order
+      </button>
+    </div>
+  </div>
+
+</div>
