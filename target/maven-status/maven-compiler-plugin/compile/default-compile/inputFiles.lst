@@ -3,6 +3,7 @@
 /Users/amemargo/IdeaProjects/capstone/src/main/java/com/example/demo/controllers/CoffeeShopController.java
 /Users/amemargo/IdeaProjects/capstone/src/main/java/com/example/demo/controllers/DepartmentController.java
 /Users/amemargo/IdeaProjects/capstone/src/main/java/com/example/demo/controllers/EmployeeController.java
+/Users/amemargo/IdeaProjects/capstone/src/main/java/com/example/demo/controllers/GlobalExceptionHandler.java
 /Users/amemargo/IdeaProjects/capstone/src/main/java/com/example/demo/controllers/OrderRunController.java
 /Users/amemargo/IdeaProjects/capstone/src/main/java/com/example/demo/controllers/PreferredOrderController.java
 /Users/amemargo/IdeaProjects/capstone/src/main/java/com/example/demo/controllers/ReportController.java
