@@ -1,10 +1,15 @@
 package com.example.demo;
 
 import com.example.demo.entities.CoffeeShop;
+import com.example.demo.entities.Department;
+import com.example.demo.entities.Employee;
 import com.example.demo.entities.MenuOption;
 import com.example.demo.repository.CoffeeShopRepository;
+import com.example.demo.repository.DepartmentRepository;
+import com.example.demo.repository.EmployeeRepository;
 import com.example.demo.repository.MenuOptionRepository;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import java.awt.*;
@@ -14,27 +19,55 @@ import java.util.List;
 public class DataInit implements CommandLineRunner {
     private final CoffeeShopRepository coffeeShopRepository;
     private final MenuOptionRepository menuOptionRepository;
+    private final DepartmentRepository departmentRepository;
+    private final EmployeeRepository employeeRepository;
+    private final PasswordEncoder passwordEncoder;
 
-    public DataInit(CoffeeShopRepository coffeeShopRepository, MenuOptionRepository menuOptionRepository) {
+    public DataInit(CoffeeShopRepository coffeeShopRepository, MenuOptionRepository menuOptionRepository, DepartmentRepository departmentRepository, EmployeeRepository employeeRepository, PasswordEncoder passwordEncoder) {
         this.coffeeShopRepository = coffeeShopRepository;
         this.menuOptionRepository = menuOptionRepository;
+        this.departmentRepository = departmentRepository;
+        this.employeeRepository = employeeRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
     public void run(String... args) {
-        if (coffeeShopRepository.count() > 0) return;
+        if (coffeeShopRepository.count() == 0) {
+            //add coffeshops
+            CoffeeShop remedy = new CoffeeShop();
+            remedy.setName("Remedy");
+            remedy.setLocation("Central Ave");
+            coffeeShopRepository.save(remedy);
+            seedMenu(remedy);
 
-        CoffeeShop remedy = new CoffeeShop();
-        remedy.setName("Remedy");
-        remedy.setLocation("Central Ave");
-        coffeeShopRepository.save(remedy);
-        seedMenu(remedy);
+            CoffeeShop oldCity = new CoffeeShop();
+            oldCity.setName("Old City Java");
+            oldCity.setLocation("Downtown");
+            coffeeShopRepository.save(oldCity);
+            seedMenu(oldCity);
+        }
+        if (departmentRepository.count() == 0) {
+            // add departments
+            Department eng = new Department();
+            eng.setCode("ENG");
+            eng.setName("Engineering");
+            departmentRepository.save(eng);
 
-        CoffeeShop oldCity = new CoffeeShop();
-        oldCity.setName("Old City Java");
-        oldCity.setLocation("Downtown");
-        coffeeShopRepository.save(oldCity);
-        seedMenu(oldCity);
+            Department acc = new Department();
+            acc.setName("Accounting");
+            acc.setCode("ACC");
+            departmentRepository.save(acc);
+        }
+        if (employeeRepository.count() == 0) {
+            Department eng = departmentRepository.findByCode("ENG").orElse(null);
+            Employee runner = new Employee();
+            runner.setEmail("runner@coffeerunner.com");
+            runner.setPassword(passwordEncoder.encode("runnerpassword"));
+            runner.setIs_admin(false);
+            runner.setDepartment(eng);
+            employeeRepository.save(runner);
+        }
     }
 
     private void seedMenu(CoffeeShop shop) {
