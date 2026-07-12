@@ -1,118 +1,157 @@
 <div class="dark-green min-h-screen p-8">
 
-  <!-- Header -->
-  <div class="flex justify-between items-center mb-10">
-    <h1 class="text-4xl font-bold text-orange-100 barrio-regular">Coffee Shops</h1>
-    <button (click)="goBack()" class="text-orange-100 chela hover:text-orange-300 transition duration-200">
-      ← Back
-    </button>
-  </div>
-
   <p *ngIf="successMessage" class="text-green-300 chela mb-4">{{ successMessage }}</p>
   <p *ngIf="errorMessage" class="text-red-300 chela mb-4">{{ errorMessage }}</p>
 
+  <ng-container *ngIf="!selectedShop">
 
-<!-- Add shop button -->
-<button *ngIf="!showShopForm" (click)="openAddShop()"
-  class="bg-red-900 hover:bg-red-800 text-orange-100 chela py-2 px-6 rounded-lg mb-8 transition duration-200">
-  + Add Coffee Shop
-</button>
-
-<!-- Add shop form -->
-<div *ngIf="showShopForm" class="mid-green rounded-2xl p-8 mb-8 max-w-lg">
-  <h2 class="text-orange-100 barrio-regular text-xl mb-6">New Coffee Shop</h2>
-  <form [formGroup]="shopForm" class="space-y-4">
-    <div class="flex flex-col gap-1">
-      <label class="text-orange-100 chela">Name</label>
-      <input formControlName="name" type="text"
-        class="bg-orange-100 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-red-800">
-    </div>
-    <div class="flex flex-col gap-1">
-      <label class="text-orange-100 chela">Location</label>
-      <input formControlName="location" type="text" class="bg-orange-100 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-red-800">
-    </div>
-  </form>
-  <div class="flex gap-4 mt-6">
-    <button (click)="saveShop()"
-      class="bg-red-900 hover:bg-red-800 text-orange-100 chela py-2 px-6 rounded-lg transition duration-200">
-      Save
-    </button>
-    <button (click)="showShopForm = false"
-      class="bg-orange-100 hover:bg-orange-200 text-red-900 chela py-2 px-6 rounded-lg transition duration-200">
-      Cancel
-    </button>
-  </div>
-</div>
-
-
-
-  <!-- Shop list -->
-  <div class="flex flex-wrap gap-3 mb-8">
-    <button *ngFor="let shop of coffeeShops"
-      (click)="selectShop(shop)"
-      [class.bg-red-900]="selectedShop?.id === shop.id"
-      [class.bg-orange-100]="selectedShop?.id !== shop.id"
-      [class.text-orange-100]="selectedShop?.id === shop.id"
-      [class.text-red-900]="selectedShop?.id !== shop.id"
-      class="px-4 py-2 rounded-lg chela transition duration-200">
-      {{ shop.name }}
-    </button>
-  </div>
-
-  <!-- Menu options for selected shop -->
-  <div *ngIf="selectedShop">
-    <div class="flex justify-between items-center mb-6">
-      <h2 class="text-orange-100 barrio-regular text-2xl">{{ selectedShop.name }} — Menu</h2>
-      <button (click)="openAddMenuOption()"
-        class="bg-red-900 hover:bg-red-800 text-orange-100 chela py-2 px-6 rounded-lg transition duration-200">
-        + Add Option
-      </button>
+    <div class="flex justify-between items-center mb-10">
+      <h1 class="text-4xl font-bold text-orange-100 barrio-regular">Coffee Shops</h1>
+      <div class="flex items-center gap-4">
+        <button (click)="goBack()" class="text-orange-100 chela hover:text-orange-300 transition duration-200">
+          ← Back
+        </button>
+        <button (click)="openAddShop()"
+          class="bg-red-900 hover:bg-red-800 text-orange-100 chela py-2 px-6 rounded-lg transition duration-200">
+          + Add Shop
+        </button>
+      </div>
     </div>
 
-    <!-- Menu option form -->
-    <div *ngIf="showMenuForm" class="mid-green rounded-2xl p-8 mb-8 max-w-lg">
-      <h3 class="text-orange-100 barrio-regular text-lg mb-4">New Menu Option</h3>
-      <form [formGroup]="menuForm" class="space-y-4">
+    <!-- Add shop -->
+    <div *ngIf="showShopForm" class="mid-green rounded-2xl p-8 mb-8 max-w-lg">
+      <h2 class="text-orange-100 barrio-regular text-xl mb-6">New Coffee Shop</h2>
+      <form [formGroup]="shopForm" class="space-y-4">
         <div class="flex flex-col gap-1">
           <label class="text-orange-100 chela">Name</label>
           <input formControlName="name" type="text"
             class="bg-orange-100 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-red-800">
         </div>
         <div class="flex flex-col gap-1">
-          <label class="text-orange-100 chela">Category</label>
-          <input formControlName="category" type="text" placeholder="e.g. milk, size, temperature"
+          <label class="text-orange-100 chela">Location</label>
+          <input formControlName="location" type="text"
             class="bg-orange-100 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-red-800">
-        </div>
-        <div class="flex items-center gap-3">
-          <input formControlName="isAvailable" type="checkbox" id="isAvailable">
-          <label for="isAvailable" class="text-orange-100 chela">Available</label>
         </div>
       </form>
       <div class="flex gap-4 mt-6">
-        <button (click)="saveMenuOption()"
+        <button (click)="saveShop()"
           class="bg-red-900 hover:bg-red-800 text-orange-100 chela py-2 px-6 rounded-lg transition duration-200">
           Save
         </button>
-        <button (click)="showMenuForm = false" class="bg-orange-100 hover:bg-orange-200 text-red-900 chela py-2 px-6 rounded-lg transition duration-200">
+        <button (click)="showShopForm = false"
+          class="bg-orange-100 hover:bg-orange-200 text-red-900 chela py-2 px-6 rounded-lg transition duration-200">
           Cancel
         </button>
       </div>
     </div>
 
-    <!-- Menu option list -->
     <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-      <div *ngFor="let option of menuOptions"
-        class="mid-green rounded-xl p-4 shadow-lg flex justify-between items-center">
-        <div>
-          <p class="text-orange-100 barrio-regular">{{ option.name }}</p>
-          <p class="text-orange-100 chela text-sm capitalize">{{ option.category }}</p>
-          <span *ngIf="!option.isAvailable" class="text-xs text-red-300 chela">Unavailable</span>
-        </div>
-        <button (click)="deleteMenuOption(option.id)"
-          class="bg-red-900 hover:bg-red-800 text-orange-100 chela py-1 px-3 rounded-lg text-sm transition duration-200">
-          Delete
+      <div *ngFor="let shop of coffeeShops"
+        (click)="selectShop(shop)"
+        class="mid-green rounded-xl p-5 shadow-lg cursor-pointer hover:brightness-110 transition duration-200">
+        <p class="text-orange-100 barrio-regular text-lg">{{ shop.name }}</p>
+        <p class="text-orange-200 chela text-sm mt-1">{{ shop.location }}</p>
+      </div>
+    </div>
+
+    <p *ngIf="coffeeShops.length === 0" class="text-orange-200 chela mt-6">
+      No coffee shops yet. Add one to get started.
+    </p>
+
+  </ng-container>
+
+  <ng-container *ngIf="selectedShop">
+ 
+    <div class="flex justify-between items-center mb-10">
+      <div>
+        <button (click)="backToList()" class="text-orange-200 chela hover:text-orange-100 transition duration-200 mb-2 block">
+          ← Coffee Shops
+        </button>
+        <h1 class="text-4xl font-bold text-orange-100 barrio-regular">{{ selectedShop.name }}</h1>
+        <p class="text-orange-200 chela text-sm mt-1">{{ selectedShop.location }}</p>
+      </div>
+      <div class="flex items-center gap-3">
+        <button *ngIf="!showMenuForm" (click)="openAddMenuOption()"
+          class="bg-red-900 hover:bg-red-800 text-orange-100 chela py-2 px-6 rounded-lg transition duration-200">
+          + Add Category
+        </button>
+        <button (click)="deleteShop(selectedShop.id)"
+          class="bg-orange-100 hover:bg-orange-200 text-red-900 chela py-2 px-6 rounded-lg transition duration-200">
+          Delete Shop
         </button>
       </div>
     </div>
-  </div>
+
+    <!-- Add category fhere-->
+    <div *ngIf="showMenuForm" class="mid-green rounded-2xl p-8 mb-8 max-w-lg">
+      <h3 class="text-orange-100 barrio-regular text-lg mb-4">Add Menu Options</h3>
+
+      <div class="space-y-4">
+        <div class="flex flex-col gap-1">
+          <label class="text-orange-100 chela">Category</label>
+          <select [(ngModel)]="newCategory"
+            class="bg-orange-100 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-red-800">
+            <option value="">Select category...</option>
+            <option *ngFor="let cat of predefinedCategories" [value]="cat">{{ cat }}</option>
+          </select>
+        </div>
+
+        <div class="flex flex-col gap-1">
+          <label class="text-orange-100 chela">Options</label>
+          <div *ngFor="let opt of newOptionNames; let i = index; trackBy: trackByIndex"
+            class="flex gap-2 mt-1">
+            <input [(ngModel)]="newOptionNames[i]"
+              placeholder="e.g. Hot"
+              class="flex-1 bg-orange-100 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-red-800">
+            <button *ngIf="newOptionNames.length > 1" (click)="removeOptionInput(i)"
+              class="bg-red-900 hover:bg-red-800 text-orange-100 chela px-3 rounded-lg transition duration-200">
+              ×
+            </button>
+          </div>
+          <button (click)="addOptionInput()"
+            class="mt-2 text-orange-200 chela text-sm hover:text-orange-100 text-left transition duration-200">
+            + Add another option
+          </button>
+        </div>
+      </div>
+
+      <div class="flex gap-4 mt-6">
+        <button (click)="saveCategory()"
+          class="bg-red-900 hover:bg-red-800 text-orange-100 chela py-2 px-6 rounded-lg transition duration-200">
+          Save
+        </button>
+        <button (click)="showMenuForm = false"
+          class="bg-orange-100 hover:bg-orange-200 text-red-900 chela py-2 px-6 rounded-lg transition duration-200">
+          Cancel
+        </button>
+      </div>
+    </div>
+
+    <!-- Category cards -->
+    <div class="space-y-4">
+      <div *ngFor="let group of categorizedMenuOptions" class="mid-green rounded-xl p-5 shadow-lg">
+        <h3 class="text-orange-100 barrio-regular text-lg mb-3">{{ group.category }}</h3>
+        <div class="flex flex-wrap gap-2">
+          <span *ngFor="let opt of group.options"
+            class="flex items-center gap-2 bg-orange-100 text-red-900 rounded-full px-4 py-1 chela text-sm">
+            {{ opt.name }}
+            <button (click)="deleteMenuOption(opt.id)"
+              class="text-red-700 hover:text-red-900 font-bold leading-none transition duration-200">
+              ×
+            </button>
+          </span>
+        </div>
+        <button (click)="openAddToCategory(group.category)"
+          class="mt-3 text-orange-200 chela text-sm hover:text-orange-100 transition duration-200">
+          + Add more options
+        </button>
+      </div>
+
+      <p *ngIf="categorizedMenuOptions.length === 0" class="text-orange-200 chela">
+        No menu options yet. Add a category to get started.
+      </p>
+    </div>
+
+  </ng-container>
+
 </div>

@@ -1,38 +1,36 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { ReactiveFormsModule, FormBuilder, FormGroup, Validators, FormsModule } from '@angular/forms';
 import { CoffeeShopService } from '../../services/CoffeeShopService';
 import { CoffeeShop, MenuOption } from '../../models/CoffeeShopModel';
+import { forkJoin } from 'rxjs';
 
 @Component({
   selector: 'app-admin-coffee-shops',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, FormsModule],
   templateUrl: './admin-coffee-shops.html'
 })
 export class AdminCoffeeShopsComponent implements OnInit {
   coffeeShops: CoffeeShop[] = [];
   selectedShop: CoffeeShop | null = null;
   menuOptions: MenuOption[] = [];
+  categorizedMenuOptions: { category: string; options: MenuOption[] }[] = [];
   shopForm: FormGroup;
-  menuForm: FormGroup;
-  showMenuForm: boolean = false;
-  showShopForm: boolean = false;
-  selectedOption: MenuOption | null = null;
+  showMenuForm = false;
+  showShopForm = false;
   errorMessage: string = '';
   successMessage: string = '';
+  newCategory = '';
+  newOptionNames: string[] = [''];
 
-  constructor(private coffeeShopService: CoffeeShopService, private fb: FormBuilder, private router: Router) {
+  readonly predefinedCategories = ['Temperature', 'Size', 'Milk', 'Syrup', 'Other'];
+
+  constructor(private coffeeShopService: CoffeeShopService, private fb: FormBuilder, private router: Router, private changeDetect: ChangeDetectorRef) {
     this.shopForm = this.fb.group({
       name: ['', Validators.required], 
       location: ['']
-    });
-
-    this.menuForm = this.fb.group({
-      name: ['', Validators.required],
-      category: ['', Validators.required],
-      isAvailable: [true]
     });
   }
 
@@ -42,8 +40,15 @@ export class AdminCoffeeShopsComponent implements OnInit {
 
   loadCoffeeShops(): void {
     this.coffeeShopService.getAll().subscribe({
-      next: (shops) => this.coffeeShops = shops,
-      error: () => this.errorMessage = "Coffee shops could not be loaded."
+      next: (shops) => {
+        console.log('shops loaded:', shops);
+        this.coffeeShops = shops;
+        this.changeDetect.detectChanges();
+      },
+      error: (err) => {
+        console.error('load error:', err);
+        this.errorMessage = "Coffee shops could not be loaded.";
+      }
     });
   }
 
@@ -67,32 +72,94 @@ export class AdminCoffeeShopsComponent implements OnInit {
   selectShop(shop: CoffeeShop): void {
     this.selectedShop = shop;
     this.showMenuForm = false;
+    this.successMessage = '';
+    this.errorMessage = '';
     this.loadMenuOptions(shop.id);
+  }
+
+  backToList(): void {
+    this.selectedShop = null;
+    this.showMenuForm = false;
+    this.showShopForm = false;
+    this.successMessage = '';
+    this.errorMessage = '';
+  }
+
+  deleteShop(shopId: string): void {
+    if(!confirm(`Delete "${this.selectedShop?.name}" and all its menu options?`)) return;
+    this.coffeeShopService.delete(shopId).subscribe({
+      next:() => {
+        this.successMessage = 'Coffee shop has been successfully deleted.';
+        this.backToList();
+        this.loadCoffeeShops();
+      },
+      error: () => this.errorMessage = "This coffee shop could not be deleted."
+    });
   }
 
   loadMenuOptions(shopId: string): void {
     this.coffeeShopService.getMenuOptions(shopId).subscribe({
-      next: (options) => this.menuOptions = options,
+      next: (options) => {
+        this.menuOptions = options;
+        this.buildCategorizedOptions();
+        this.changeDetect.detectChanges();
+      },
       error: () => this.errorMessage = "The menu options could not be loaded."
     });
   }
 
+  buildCategorizedOptions(): void {
+    const grouped = this.menuOptions.reduce((acc, opt) => {
+      if (!acc[opt.category]) acc[opt.category] = [];
+      acc[opt.category].push(opt);
+      return acc;
+    },
+    {} as { [key: string]: MenuOption[] });
+
+    this.categorizedMenuOptions = Object.entries(grouped).map(([category, options]) => ({
+      category, options}));
+  }
+
   openAddMenuOption(): void {
-    this.selectedOption = null;
-    this.menuForm.reset({isAvailable:true});
+    this.newCategory = '';
+    this.newOptionNames = [''];
     this.showMenuForm = true;
   }
 
-  saveMenuOption(): void {
-    if (!this.selectedShop || this.menuForm.invalid) return;
-    const option = {
-      ...this.menuForm.value,
-      coffeeShopId: this.selectedShop.id
-    };
+  openAddToCategory(category: string): void {
+    this.newCategory = '';
+    this.newOptionNames = [''];
+    this.showMenuForm = true;
+  }
 
-    this.coffeeShopService.addMenuOption(this.selectedShop.id, option).subscribe({
+  addOptionInput(): void {
+    this.newOptionNames.push('');
+  }
+
+  removeOptionInput(index: number): void {
+    this.newOptionNames.splice(index, 1);
+  }
+
+  trackByIndex(index: number): number {
+    return index;
+  }
+
+  saveCategory(): void {
+    if(!this.selectedShop || !this.newCategory) return;
+    const validNames = this.newOptionNames.filter(n => n.trim());
+    if (!validNames.length) return;
+
+    const saves = validNames.map(name =>
+      this.coffeeShopService.addMenuOption(this.selectedShop!.id, {
+        name: name.trim(),
+        category: this.newCategory,
+        isAvailable: true
+      })
+    );
+
+    forkJoin(saves).subscribe({
       next: () => {
-        this.successMessage = 'Menu option saved.';
+        this.successMessage = `${this.newCategory} options saved.`;
         this.showMenuForm = false;
         this.loadMenuOptions(this.selectedShop!.id);
       },

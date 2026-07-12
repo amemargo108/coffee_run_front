@@ -28,6 +28,10 @@ export class CoffeeShopService {
         return this.http.post<CoffeeShop>(`${this.apiUrl}/coffee-shops`, shop);
     }
 
+    delete(shopId: string): Observable<void> {
+        return this.http.delete<void>(`${this.apiUrl}/coffee-shops/${shopId}`)
+    }
+
     deleteMenuOption(optionId: string): Observable<void> {
         return this.http.delete<void>(`${this.apiUrl}/coffee-shops/menu/${optionId}`);
     }

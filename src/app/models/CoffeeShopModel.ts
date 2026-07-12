@@ -1,7 +1,7 @@
 export interface CoffeeShop {
     id:  string;
     name: string;
-    lacation?: string;
+    location?: string;
 }
 
 export interface MenuOption {
