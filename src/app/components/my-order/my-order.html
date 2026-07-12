@@ -1,65 +1,83 @@
 <div class="dark-green min-h-screen p-8">
 
-  <!-- Header -->
-  <div class="flex justify-between items-center mb-10">
-    <h1 class="text-4xl font-bold text-orange-100 barrio-regular">My Order</h1>
-    <button (click)="goBack()" class="text-orange-100 chela hover:text-orange-300 transition duration-200">
-      ← Back
-    </button>
-  </div>
-
-  <!-- Messages -->
   <p *ngIf="successMessage" class="text-green-300 chela mb-4">{{ successMessage }}</p>
   <p *ngIf="errorMessage" class="text-red-300 chela mb-4">{{ errorMessage }}</p>
 
-  <!-- Shop selector -->
-  <div class="mb-8">
-    <h2 class="text-orange-100 chela text-xl mb-4">Select a coffee shop:</h2>
-    <div class="flex flex-wrap gap-3">
-      <button *ngFor="let shop of coffeeShops"
-        (click)="selectShop(shop)"
-        [class.bg-red-900]="selectedShop?.id === shop.id"
-        [class.bg-orange-100]="selectedShop?.id !== shop.id"
-        [class.text-orange-100]="selectedShop?.id === shop.id"
-        [class.text-red-900]="selectedShop?.id !== shop.id"
-        class="px-4 py-2 rounded-lg chela transition duration-200">
-        {{ shop.name }}
+  <!-- ── LIST VIEW ── -->
+  <ng-container *ngIf="!selectedShop">
+
+    <div class="flex justify-between items-center mb-10">
+      <h1 class="text-4xl font-bold text-orange-100 barrio-regular">My Order</h1>
+      <button (click)="goBack()" class="text-orange-100 chela hover:text-orange-300 transition duration-200">
+        ← Back
       </button>
     </div>
-  </div>
 
-  <!-- Loading -->
-  <p *ngIf="isLoading" class="text-orange-100 chela">Loading menu...</p>
+    <p class="text-orange-200 chela mb-6">Select a coffee shop to set your preferred order.</p>
 
-  <!-- Menu options -->
-  <div *ngIf="selectedShop && !isLoading">
-    <div *ngFor="let category of categories" class="mb-6">
-      <h3 class="text-orange-100 barrio-regular text-lg mb-3 capitalize">{{ category }}</h3>
-      <div class="flex flex-wrap gap-3">
-        <button *ngFor="let option of getOptionsByCategory(category)"
-          (click)="toggleOption(option.id)"
-          [class.bg-red-900]="isSelected(option.id)"
-          [class.bg-orange-100]="!isSelected(option.id)"
-          [class.text-orange-100]="isSelected(option.id)"
-          [class.text-red-900]="!isSelected(option.id)"
-          class="px-4 py-2 rounded-lg chela transition duration-200">
-          {{ option.name }}
-        </button>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div *ngFor="let shop of coffeeShops"
+        (click)="selectShop(shop)"
+        class="mid-green rounded-xl p-5 shadow-lg cursor-pointer hover:brightness-110 transition duration-200">
+        <p class="text-orange-100 barrio-regular text-lg">{{ shop.name }}</p>
+        <p class="text-orange-200 chela text-sm mt-1">{{ shop.location }}</p>
       </div>
     </div>
 
-    <!-- Actions -->
-    <div class="flex gap-4 mt-8">
-      <button (click)="saveOrder()" [disabled]="isSaving"
-        class="bg-red-900 hover:bg-red-800 text-orange-100 chela py-2 px-6 rounded-lg transition duration-200">
-        {{ isSaving ? 'Saving...' : currentOrder ? 'Update Order' : 'Save Order' }}
-      </button>
+    <p *ngIf="coffeeShops.length === 0" class="text-orange-200 chela mt-6">
+      No coffee shops available.
+    </p>
 
-      <button *ngIf="currentOrder" (click)="deleteOrder()"
-        class="bg-orange-100 hover:bg-orange-200 text-red-900 chela py-2 px-6 rounded-lg transition duration-200">
-        Delete Order
-      </button>
+  </ng-container>
+
+  <!-- ── DETAIL VIEW ── -->
+  <ng-container *ngIf="selectedShop">
+
+    <div class="flex justify-between items-center mb-10">
+      <div>
+        <button (click)="backToList()"
+          class="text-orange-200 chela hover:text-orange-100 transition duration-200 mb-2 block">
+          ← Coffee Shops
+        </button>
+        <h1 class="text-4xl font-bold text-orange-100 barrio-regular">{{ selectedShop.name }}</h1>
+        <p class="text-orange-200 chela text-sm mt-1">My Preferred Order</p>
+      </div>
     </div>
-  </div>
+
+    <p *ngIf="isLoading" class="text-orange-100 chela">Loading menu...</p>
+
+    <div *ngIf="!isLoading">
+
+      <!-- One dropdown per category -->
+      <div *ngFor="let category of categories" class="mb-6 max-w-md">
+        <label class="text-orange-100 barrio-regular text-lg block mb-2">{{ category }}</label>
+        <select [(ngModel)]="selections[category]"
+          class="w-full bg-orange-100 text-red-900 rounded-lg px-4 py-2 chela focus:outline-none focus:ring-2 focus:ring-red-800">
+          <option value="">No preference</option>
+          <option *ngFor="let opt of getOptionsByCategory(category)" [value]="opt.id">
+            {{ opt.name }}
+          </option>
+        </select>
+      </div>
+
+      <p *ngIf="categories.length === 0" class="text-orange-200 chela">
+        No menu options have been set up for this shop yet.
+      </p>
+
+      <!-- Save / Delete -->
+      <div class="flex gap-4 mt-8" *ngIf="categories.length > 0">
+        <button (click)="saveOrder()" [disabled]="isSaving"
+          class="bg-red-900 hover:bg-red-800 text-orange-100 chela py-2 px-6 rounded-lg transition duration-200 disabled:opacity-50">
+          {{ isSaving ? 'Saving...' : currentOrder ? 'Update Order' : 'Save Order' }}
+        </button>
+        <button *ngIf="currentOrder" (click)="deleteOrder()"
+          class="bg-orange-100 hover:bg-orange-200 text-red-900 chela py-2 px-6 rounded-lg transition duration-200">
+          Delete Order
+        </button>
+      </div>
+
+    </div>
+
+  </ng-container>
 
 </div>

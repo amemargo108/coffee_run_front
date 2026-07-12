@@ -22,4 +22,8 @@ export class PreferredOrderService {
     delete(orderId: string, employeeId: string): Observable<void> {
         return this.http.delete<void>(`${this.apiUrl}/preferred-orders/${orderId}/employee/${employeeId}`);
     }
+
+    getMyOrder(employeeId: string, shopId: string): Observable<any> {
+    return this.http.get(`${this.apiUrl}/preferred-orders/employee/${employeeId}/shop/${shopId}`);
+}
 }

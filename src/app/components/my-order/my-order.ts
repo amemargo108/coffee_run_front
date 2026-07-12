@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../../services/auth.service';
@@ -6,11 +6,12 @@ import { CoffeeShopService } from '../../services/CoffeeShopService';
 import { PreferredOrderService } from '../../services/PreferredOrderService'
 import { CoffeeShop, MenuOption } from '../../models/CoffeeShopModel'
 import { PreferredOrder } from '../../models/PreferredOrderModel';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-my-order',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, FormsModule],
   templateUrl: './my-order.html',
 })
 export class MyOrderComponent implements OnInit {
@@ -18,7 +19,7 @@ export class MyOrderComponent implements OnInit {
   selectedShop: CoffeeShop | null = null;
   menuOptions: MenuOption[] = [];
   currentOrder: PreferredOrder | null = null;
-  selectedOptionIds: string[] = [];
+  selections: { [category: string]: string } = {};
   categories: string[] = [];
   isLoading: boolean = false;
   isSaving: boolean = false;
@@ -26,7 +27,7 @@ export class MyOrderComponent implements OnInit {
   errorMessage: string = '';
   employeeId: string = '';
 
-  constructor(private authService: AuthService, private coffeeShopService: CoffeeShopService, private preferredOrderService: PreferredOrderService, private router: Router) {}
+  constructor(private authService: AuthService, private coffeeShopService: CoffeeShopService, private preferredOrderService: PreferredOrderService, private router: Router, private changeDetect: ChangeDetectorRef) {}
 
   ngOnInit(): void {
     this.employeeId = this.authService.getEmployeeId() ?? '';
@@ -35,14 +36,17 @@ export class MyOrderComponent implements OnInit {
 
   loadCoffeeShops(): void {
     this.coffeeShopService.getAll().subscribe({
-      next: (shops) => this.coffeeShops = shops,
+      next: (shops) => {
+        this.coffeeShops = shops;
+        this.changeDetect.detectChanges();
+      },
       error: () => this.errorMessage = "Coffee shops could not be loaded."
     });
   }
 
   selectShop(shop: CoffeeShop): void {
     this.selectedShop = shop;
-    this.selectedOptionIds = [];
+    this.selections = {};
     this.currentOrder = null;
     this.successMessage = '';
     this.errorMessage = '';
@@ -50,45 +54,49 @@ export class MyOrderComponent implements OnInit {
 
     this.coffeeShopService.getMenuOptions(shop.id).subscribe({
       next: (options) => {
-        this.menuOptions = options.filter(o => o.isAvailable);
+        this.menuOptions = options.filter(o => o.isAvailable || (o as any).is_available);
         this.categories = [...new Set(options.map(o=>o.category))];
 
         // if an existing order exists already, this loads it
-        const deptCode = this.authService.getDepartmentCode() ?? '';
-        this.preferredOrderService.getOrdersForDepartmentAndShop(deptCode, shop.id).subscribe({
-          next: (orders) => {
-            const myOrder = orders.find(o => o.employeeName !== null);
-            if (myOrder) {
-              this.currentOrder = myOrder;
-              this.selectedOptionIds = this.menuOptions.filter(o => myOrder.selections.includes(o.name))
-              .map(o => o.id);
+        this.preferredOrderService.getMyOrder(this.employeeId, shop.id).subscribe({
+          next: (order) => {
+            if (order) {
+              this.currentOrder = order;
+              this.menuOptions.forEach(opt => {
+                if (order.selections.includes(opt.name)) {
+                  this.selections[opt.category] = opt.id;
+                }
+              });
             }
             this.isLoading = false;
+            this.changeDetect.detectChanges();
           },
-          error: () => this.isLoading = false
+          error: () => {
+            this.isLoading = false;
+            this.changeDetect.detectChanges();
+          }
         });
       },
       error: () => {
         this.errorMessage = "Menu options could not be loaded.";
         this.isLoading = false;
+        this.changeDetect.detectChanges();
       }
     });
   }
 
+  backToList(): void {
+    this.selectedShop = null;
+    this.selections = {};
+    this.currentOrder = null;
+    this.menuOptions = [];
+    this.categories = [];
+    this.successMessage = '';
+    this.errorMessage = '';
+  }
+
   getOptionsByCategory(category: string): MenuOption[] {
     return this.menuOptions.filter(o => o.category === category);
-  }
-
-  toggleOption(optionId: string): void {
-    if (this.selectedOptionIds.includes(optionId)) {
-      this.selectedOptionIds = this.selectedOptionIds.filter(id => id !== optionId);
-    } else {
-      this.selectedOptionIds.push(optionId);
-    }
-  }
-
-  isSelected(optionId: string): boolean {
-    return this.selectedOptionIds.includes(optionId);
   }
 
   saveOrder(): void {
@@ -97,14 +105,18 @@ export class MyOrderComponent implements OnInit {
     this.successMessage = '';
     this.errorMessage = '';
 
-    this.preferredOrderService.saveOrUpdate(this.employeeId, this.selectedShop.id, this.selectedOptionIds).subscribe({
+    const selectedOptionIds = Object.values(this.selections).filter(id => id);
+
+    this.preferredOrderService.saveOrUpdate(this.employeeId, this.selectedShop.id, selectedOptionIds).subscribe({
       next: () => {
         this.isSaving = false;
         this.successMessage = "Order saved!";
+        this.changeDetect.detectChanges();
       },
       error: () => {
         this.isSaving = false;
         this.errorMessage = "This order could not be saved.";
+        this.changeDetect.detectChanges();
       }
     });
   }
@@ -114,8 +126,9 @@ export class MyOrderComponent implements OnInit {
     this.preferredOrderService.delete(this.currentOrder.id, this.employeeId).subscribe({
       next: () => {
         this.currentOrder = null;
-        this.selectedOptionIds = [];
+        this.selections = {};
         this.successMessage = "Order successfully deleted.";
+        this.changeDetect.detectChanges();
       },
       error: () => this.errorMessage = "This order could not be saved."
     });
