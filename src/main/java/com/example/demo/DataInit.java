@@ -8,6 +8,7 @@ import com.example.demo.repository.CoffeeShopRepository;
 import com.example.demo.repository.DepartmentRepository;
 import com.example.demo.repository.EmployeeRepository;
 import com.example.demo.repository.MenuOptionRepository;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
@@ -30,6 +31,9 @@ public class DataInit implements CommandLineRunner {
         this.employeeRepository = employeeRepository;
         this.passwordEncoder = passwordEncoder;
     }
+
+    @Value("${seed.employee.password}")
+    private String seedEmployeePassword;
 
     @Override
     public void run(String... args) {
@@ -62,11 +66,18 @@ public class DataInit implements CommandLineRunner {
         if (employeeRepository.count() == 0) {
             Department eng = departmentRepository.findByCode("ENG").orElse(null);
             Employee runner = new Employee();
-            runner.setEmail("runner@coffeerunner.com");
+            runner.setEmail("runner@coffeerun.com");
             runner.setPassword(passwordEncoder.encode("runnerpassword"));
             runner.setIs_admin(false);
             runner.setDepartment(eng);
             employeeRepository.save(runner);
+
+            Employee schoolAdmin = new Employee();
+            schoolAdmin.setEmail("schooladmin@coffeerun.com");
+            schoolAdmin.setPassword(passwordEncoder.encode(seedEmployeePassword));
+            schoolAdmin.setIs_admin(true);
+            schoolAdmin.setDepartment(eng);
+            employeeRepository.save(schoolAdmin);
         }
     }
 
