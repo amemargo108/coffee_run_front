@@ -36,6 +36,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
     }
         try {
         String token = authHeader.substring(7);
+        println("Token received (length " + token.length() + "): " + token);
         String email = jwtService.extractEmail(token);
 
         if (email != null && SecurityContextHolder.getContext().getAuthentication() == null) {
@@ -48,7 +49,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
             }
         }
         } catch (Exception e) {
-            println("An invalid token has been sent");
+            println("An invalid token: " + e.getClass().getSimpleName() + " - " + e.getMessage());
         }
         filterChain.doFilter(request, response);
     }

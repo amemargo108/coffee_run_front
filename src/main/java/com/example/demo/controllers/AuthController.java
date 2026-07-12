@@ -2,6 +2,7 @@ package com.example.demo.controllers;
 
 
 import com.example.demo.services.AuthService;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -22,6 +23,8 @@ public class AuthController {
     @PostMapping("/login")
     public ResponseEntity<String> login(@RequestBody LoginRequest request) {
         String token = authService.login(request.getEmail(), request.getPassword());
-        return ResponseEntity.ok(token);
+        return ResponseEntity.ok()
+                .contentType(MediaType.TEXT_PLAIN)
+                .body(token);
     }
 }
