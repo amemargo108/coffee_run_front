@@ -5,6 +5,7 @@ import com.example.demo.entities.CoffeeShop;
 import com.example.demo.entities.MenuOption;
 import com.example.demo.services.CoffeeShopService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -35,22 +36,26 @@ public class CoffeeShopController {
     }
 
     @PostMapping
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<CoffeeShop> create(@RequestBody CoffeeShop coffeeShop) {
         return ResponseEntity.ok(coffeeShopService.create(coffeeShop));
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<CoffeeShop> update(@PathVariable UUID id, @RequestBody CoffeeShop coffeeShop) {
         return ResponseEntity.ok(coffeeShopService.update(id, coffeeShop));
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Void> delete(@PathVariable UUID id) {
         coffeeShopService.delete(id);
         return ResponseEntity.noContent().build();
     }
 
     @PostMapping("/{id}/menu")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<MenuOption> addMenuOption(@PathVariable UUID id, @RequestBody MenuOption menuOption) {
         menuOption.setCoffeeShop(coffeeShopService.getAll()
                 .stream()
@@ -61,11 +66,13 @@ public class CoffeeShopController {
     }
 
     @PutMapping("/menu/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<MenuOption> updateMenuOption(@PathVariable UUID id, @RequestBody MenuOption menuOption) {
         return ResponseEntity.ok(coffeeShopService.updateMenuOption(id, menuOption));
     }
 
     @DeleteMapping("/menu/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Void> deleteMenuOption(@PathVariable UUID id) {
         coffeeShopService.deleteMenuOption(id);
         return ResponseEntity.noContent().build();
