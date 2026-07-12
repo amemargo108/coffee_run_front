@@ -1,13 +1,8 @@
 package com.example.demo.services;
 
-import com.example.demo.entities.Employee;
-import com.example.demo.entities.MenuOption;
-import com.example.demo.entities.OrderSelection;
-import com.example.demo.entities.PreferredOrder;
-import com.example.demo.repository.EmployeeRepository;
-import com.example.demo.repository.MenuOptionRepository;
-import com.example.demo.repository.OrderSelectionRepository;
-import com.example.demo.repository.PreferredOrderRepository;
+import com.example.demo.dtos.PreferredOrderResponse;
+import com.example.demo.entities.*;
+import com.example.demo.repository.*;
 import jakarta.transaction.Transactional;
 import org.aspectj.weaver.ast.Or;
 import org.springframework.security.access.AccessDeniedException;
@@ -15,6 +10,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -23,12 +19,14 @@ public class PreferredOrderService {
     private final OrderSelectionRepository orderSelectionRepository;
     private final EmployeeRepository employeeRepository;
     private final MenuOptionRepository menuOptionRepository;
+    private final CoffeeShopRepository coffeeShopRepository;
 
-    public PreferredOrderService(PreferredOrderRepository preferredOrderRepository, OrderSelectionRepository orderSelectionRepository, EmployeeRepository employeeRepository, MenuOptionRepository menuOptionRepository) {
+    public PreferredOrderService(PreferredOrderRepository preferredOrderRepository, OrderSelectionRepository orderSelectionRepository, EmployeeRepository employeeRepository, MenuOptionRepository menuOptionRepository, CoffeeShopRepository coffeeShopRepository) {
         this.preferredOrderRepository = preferredOrderRepository;
         this.orderSelectionRepository = orderSelectionRepository;
         this.employeeRepository = employeeRepository;
         this.menuOptionRepository = menuOptionRepository;
+        this.coffeeShopRepository = coffeeShopRepository;
     }
 
     //this will create the Runner View
@@ -42,8 +40,10 @@ public class PreferredOrderService {
         PreferredOrder order = preferredOrderRepository.findByEmployeeIdAndCoffeeShopId(employeeId, coffeeShopId)
                 .orElseGet(() -> {
                     Employee employee = employeeRepository.findById(employeeId).orElseThrow(() -> new RuntimeException("This employee could not be found " + employeeId));
+                    CoffeeShop coffeeShop = coffeeShopRepository.findById(coffeeShopId).orElseThrow(() -> new RuntimeException("This coffee shop could not be found: " + coffeeShopId));
                     PreferredOrder newOrder = new PreferredOrder();
                     newOrder.setEmployee(employee);
+                    newOrder.setCoffeeShop(coffeeShop);
                     return newOrder;
                 });
 
@@ -74,5 +74,14 @@ public class PreferredOrderService {
 
         orderSelectionRepository.deleteByPreferredOrderId(orderId);
         preferredOrderRepository.delete(order);
+    }
+
+    public Optional<PreferredOrderResponse> getByEmployeeAndShop(UUID employeeId, UUID coffeeShopId) {
+        return preferredOrderRepository.findByEmployeeIdAndCoffeeShopId(employeeId, coffeeShopId)
+                .map(order -> {
+                    List<String> selectionNames = orderSelectionRepository.findByPreferredOrderId(order.getId())
+                            .stream().map(s -> s.getMenuOption().getName()).toList();
+                    return PreferredOrderResponse.from(order, selectionNames);
+                });
     }
 }

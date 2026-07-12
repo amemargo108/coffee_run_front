@@ -46,10 +46,18 @@ public class PreferredOrderController {
     }
 
 
-
     @DeleteMapping("/{orderId}/employee/{employeeId}")
     public ResponseEntity<Void> delete(@PathVariable UUID orderId, @PathVariable UUID employeeId) {
         preferredOrderService.delete(orderId, employeeId);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/employee/{employeeId}/shop/{shopId}")
+    public ResponseEntity<PreferredOrderResponse> getMyOrder(
+            @PathVariable UUID employeeId,
+            @PathVariable UUID shopId) {
+        return preferredOrderService.getByEmployeeAndShop(employeeId, shopId)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
     }
 }
