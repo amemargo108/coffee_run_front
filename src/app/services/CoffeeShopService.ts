@@ -13,18 +13,22 @@ export class CoffeeShopService {
     constructor(private http: HttpClient) {}
 
     getAll(): Observable<CoffeeShop[]> {
-        return this.http.get<CoffeeShop[]>('${this.apiUrl}/coffee-shops');
+        return this.http.get<CoffeeShop[]>(`${this.apiUrl}/coffee-shops`);
     }
 
     getMenuOptions(coffeeShopId: string): Observable<MenuOption[]> {
-        return this.http.get<MenuOption[]>('${this.apiUrl}/coffee-shops/${coffeeShopId}/menu');
+        return this.http.get<MenuOption[]>(`${this.apiUrl}/coffee-shops/${coffeeShopId}/menu`);
     }
 
     addMenuOption(coffeeShopId: string, option: any): Observable<MenuOption> {
         return this.http.post<MenuOption>(`${this.apiUrl}/coffee-shops/${coffeeShopId}/menu`, option);
     }
 
+    create(shop: any): Observable<CoffeeShop> {
+        return this.http.post<CoffeeShop>(`${this.apiUrl}/coffee-shops`, shop);
+    }
+
     deleteMenuOption(optionId: string): Observable<void> {
-        return this.http.delete<void>('${this.apiUrl}/coffee-shops/menu/${optionId}');
+        return this.http.delete<void>(`${this.apiUrl}/coffee-shops/menu/${optionId}`);
     }
 }

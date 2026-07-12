@@ -12,11 +12,11 @@ export class OrderRunService {
 
     pullOrderList(runnerId: string, coffeeShopId: string, departmentCode: string): Observable<OrderRun> {
         return this.http.post<OrderRun>(
-                '${this.apiUrl}/order-runs/runner/${runnerId}/shop/${coffeeShopId}/department/${departmentCode}',
+                `${this.apiUrl}/order-runs/runner/${runnerId}/shop/${coffeeShopId}/department/${departmentCode}`,
             {}
         );
     }
     getRunById(id: string): Observable<OrderRun> {
-        return this.http.get<OrderRun>('${this.apiUrl}/order-runs/${id}');
+        return this.http.get<OrderRun>(`${this.apiUrl}/order-runs/${id}`);
     }
 }

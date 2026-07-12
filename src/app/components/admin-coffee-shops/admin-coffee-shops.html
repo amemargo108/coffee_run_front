@@ -11,6 +11,41 @@
   <p *ngIf="successMessage" class="text-green-300 chela mb-4">{{ successMessage }}</p>
   <p *ngIf="errorMessage" class="text-red-300 chela mb-4">{{ errorMessage }}</p>
 
+
+<!-- Add shop button -->
+<button *ngIf="!showShopForm" (click)="openAddShop()"
+  class="bg-red-900 hover:bg-red-800 text-orange-100 chela py-2 px-6 rounded-lg mb-8 transition duration-200">
+  + Add Coffee Shop
+</button>
+
+<!-- Add shop form -->
+<div *ngIf="showShopForm" class="mid-green rounded-2xl p-8 mb-8 max-w-lg">
+  <h2 class="text-orange-100 barrio-regular text-xl mb-6">New Coffee Shop</h2>
+  <form [formGroup]="shopForm" class="space-y-4">
+    <div class="flex flex-col gap-1">
+      <label class="text-orange-100 chela">Name</label>
+      <input formControlName="name" type="text"
+        class="bg-orange-100 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-red-800">
+    </div>
+    <div class="flex flex-col gap-1">
+      <label class="text-orange-100 chela">Location</label>
+      <input formControlName="location" type="text" class="bg-orange-100 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-red-800">
+    </div>
+  </form>
+  <div class="flex gap-4 mt-6">
+    <button (click)="saveShop()"
+      class="bg-red-900 hover:bg-red-800 text-orange-100 chela py-2 px-6 rounded-lg transition duration-200">
+      Save
+    </button>
+    <button (click)="showShopForm = false"
+      class="bg-orange-100 hover:bg-orange-200 text-red-900 chela py-2 px-6 rounded-lg transition duration-200">
+      Cancel
+    </button>
+  </div>
+</div>
+
+
+
   <!-- Shop list -->
   <div class="flex flex-wrap gap-3 mb-8">
     <button *ngFor="let shop of coffeeShops"
@@ -58,8 +93,7 @@
           class="bg-red-900 hover:bg-red-800 text-orange-100 chela py-2 px-6 rounded-lg transition duration-200">
           Save
         </button>
-        <button (click)="showMenuForm = false"
-          class="bg-orange-100 hover:bg-orange-200 text-red-900 chela py-2 px-6 rounded-lg transition duration-200">
+        <button (click)="showMenuForm = false" class="bg-orange-100 hover:bg-orange-200 text-red-900 chela py-2 px-6 rounded-lg transition duration-200">
           Cancel
         </button>
       </div>
@@ -81,5 +115,4 @@
       </div>
     </div>
   </div>
-
 </div>

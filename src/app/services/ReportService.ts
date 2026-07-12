@@ -12,11 +12,11 @@ export class ReportService {
     constructor(private http: HttpClient) {}
 
     getByRunner(runnerId: string): Observable<OrderRun[]> {
-        return this.http.get<OrderRun[]>('${this.apiUrl}/reports/runner/${runnerId}');
+        return this.http.get<OrderRun[]>(`${this.apiUrl}/reports/runner/${runnerId}`);
     }
 
     getByDepartment(departmentCode: string): Observable<OrderRun[]> {
-        return this.http.get<OrderRun[]>('${this.apiUrl}/reports/department/${departmentCode}');
+        return this.http.get<OrderRun[]>(`${this.apiUrl}/reports/department/${departmentCode}`);
     }
 
     getByDateRange(start: string, end: string): Observable<OrderRun[]> {

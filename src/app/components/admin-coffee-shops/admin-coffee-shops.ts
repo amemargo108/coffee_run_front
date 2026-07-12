@@ -47,6 +47,23 @@ export class AdminCoffeeShopsComponent implements OnInit {
     });
   }
 
+  openAddShop(): void {
+    this.shopForm.reset();
+    this.showShopForm = true;
+  }
+
+  saveShop(): void {
+    if(this.shopForm.invalid) return;
+    this,this.coffeeShopService.create(this.shopForm.value).subscribe({
+      next: () => {
+        this.successMessage = "This coffee shop has been added.";
+        this.showShopForm = false;
+        this.loadCoffeeShops();
+      },
+      error: () => this.errorMessage = "This coffee shop could not be saved."
+    });
+  }
+
   selectShop(shop: CoffeeShop): void {
     this.selectedShop = shop;
     this.showMenuForm = false;

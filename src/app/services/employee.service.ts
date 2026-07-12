@@ -11,18 +11,18 @@ export class EmployeeService {
     constructor(private http: HttpClient) {}
 
     getByDepartment(departmentCode: string): Observable<Employee[]> {
-        return this.http.get<Employee[]>('${this.apiUrl/employees/department/${departmentCode}');   
+        return this.http.get<Employee[]>(`${this.apiUrl}/employees/department/${departmentCode}`);   
     }
 
     create(employee: any): Observable<Employee> {
-        return this.http.post<Employee>('${this.apiUrl}/employees', employee);
+        return this.http.post<Employee>(`${this.apiUrl}/employees`, employee);
     }
 
     update(id: string, employee: any): Observable<Employee> {
-        return this.http.put<Employee>('${this.apiUrl}/employees/${id}', employee);
+        return this.http.put<Employee>(`${this.apiUrl}/employees/${id}`, employee);
     }
 
     delete(id: string): Observable<void> {
-        return this.http.delete<void>('${this.apiUrl}/employees/${id}');
+        return this.http.delete<void>(`${this.apiUrl}/employees/${id}`);
     }
  }

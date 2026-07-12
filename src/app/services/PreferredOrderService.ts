@@ -12,14 +12,14 @@ export class PreferredOrderService {
     constructor(private http: HttpClient) {}
 
     getOrdersForDepartmentAndShop(departmentCode: string, coffeeShopId: string): Observable<PreferredOrder[]> {
-        return this.http.get<PreferredOrder[]>('${this.apiUrl}/preferred-orders/department/${departmentCode}/shop/${coffeeShopId}');
+        return this.http.get<PreferredOrder[]>(`${this.apiUrl}/preferred-orders/department/${departmentCode}/shop/${coffeeShopId}`);
     }
 
     saveOrUpdate(employeeId: string, CoffeeShopId: string, MenuOptionIds: string[]): Observable<PreferredOrder> {
-        return this.http.post<PreferredOrder>('${this.apiUrl}/preferred-orders/employee/${employeeId}/shop/${coffeeShopId}', MenuOptionIds);
+        return this.http.post<PreferredOrder>(`${this.apiUrl}/preferred-orders/employee/${employeeId}/shop/${CoffeeShopId}`, MenuOptionIds);
     }
 
     delete(orderId: string, employeeId: string): Observable<void> {
-        return this.http.delete<void>('${this.apiUrl}/preferred-orders/${orderId}/employee/${employeeId}');
+        return this.http.delete<void>(`${this.apiUrl}/preferred-orders/${orderId}/employee/${employeeId}`);
     }
 }
