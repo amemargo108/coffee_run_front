@@ -1,59 +1,91 @@
 <div class="dark-green min-h-screen p-8">
 
-  <!-- Header -->
-  <div class="flex justify-between items-center mb-10">
-    <h1 class="text-4xl font-bold text-orange-100 barrio-regular">Runner View</h1>
-    <button (click)="goBack()" class="text-orange-100 chela hover:text-orange-300 transition duration-200">
-      ← Back
-    </button>
-  </div>
-
   <p *ngIf="errorMessage" class="text-red-300 chela mb-4">{{ errorMessage }}</p>
+  <p *ngIf="successMessage" class="text-green-300 chela mb-4">{{ successMessage }}</p>
+  
+  <ng-container *ngIf="!selectedShop">
 
-  <!-- Shop selector -->
-  <div class="mb-8">
-    <h2 class="text-orange-100 chela text-xl mb-4">Select a coffee shop:</h2>
-    <div class="flex flex-wrap gap-3">
-      <button *ngFor="let shop of coffeeShops"
-        (click)="selectShop(shop)"
-        [class.bg-red-900]="selectedShop?.id === shop.id"
-        [class.bg-orange-100]="selectedShop?.id !== shop.id"
-        [class.text-orange-100]="selectedShop?.id === shop.id"
-        [class.text-red-900]="selectedShop?.id !== shop.id"
-        class="px-4 py-2 rounded-lg chela transition duration-200">
-        {{ shop.name }}
+    <div class="flex justify-between items-center mb-10">
+      <h1 class="text-4xl font-bold text-orange-100 barrio-regular">Runner View</h1>
+      <button (click)="goBack()" class="text-orange-100 chela hover:text-orange-300 transition duration-200">
+        ← Back
       </button>
     </div>
-  </div>
 
-  <!-- Pull button -->
-  <div *ngIf="selectedShop" class="mb-8">
-    <p class="text-orange-100 chela mb-4">
-      Pulling orders for <strong>{{ departmentCode }}</strong> from <strong>{{ selectedShop.name }}</strong>
-    </p>
-    <button (click)="pullList()" [disabled]="isPulling"
-      class="bg-red-900 hover:bg-red-800 text-orange-100 chela py-2 px-6 rounded-lg transition duration-200">
-      {{ isPulling ? 'Pulling...' : 'Pull Order List' }}
-    </button>
-  </div>
+    <p class="text-orange-200 chela mb-6">Select a coffee shop to pull an order list.</p>
 
-  <!-- Order list -->
-  <div *ngIf="currentRun">
-    <h2 class="text-orange-100 barrio-regular text-2xl mb-6">
-      Order List — {{ currentRun.coffeeShopName }}
-    </h2>
-
-    <div *ngIf="currentRun.items.length === 0" class="text-orange-100 chela">
-      No orders found for this department at this shop.
-    </div>
-
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-      <div *ngFor="let item of currentRun.items"
-        class="mid-green rounded-xl p-6 shadow-lg">
-        <h3 class="text-orange-100 barrio-regular text-lg mb-2">{{ item.employeeName }}</h3>
-        <p class="text-orange-100 chela">{{ item.orderSummary }}</p>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div *ngFor="let shop of coffeeShops"
+        (click)="selectShop(shop)"
+        class="mid-green rounded-xl p-5 shadow-lg cursor-pointer hover:brightness-110 transition duration-200">
+        <p class="text-orange-100 barrio-regular text-lg">{{ shop.name }}</p>
+        <p class="text-orange-200 chela text-sm mt-1">{{ shop.location }}</p>
       </div>
     </div>
-  </div>
+
+    <p *ngIf="coffeeShops.length === 0" class="text-orange-200 chela mt-6">
+      No coffee shops available.
+    </p>
+
+  </ng-container>
+
+  <ng-container *ngIf="selectedShop">
+
+    <div class="flex justify-between items-center mb-8">
+      <div>
+        <button (click)="backToList()"
+          class="text-orange-200 chela hover:text-orange-100 transition duration-200 mb-2 block">
+          ← Coffee Shops
+        </button>
+        <h1 class="text-4xl font-bold text-orange-100 barrio-regular">{{ selectedShop.name }}</h1>
+      </div>
+    </div>
+
+    <!-- department and pulling -->
+    <div class="flex items-end gap-4 mb-8 max-w-lg">
+      <div class="flex-1">
+        <label class="text-orange-100 chela block mb-2">Department</label>
+        <select [(ngModel)]="selectedDeptCode"
+          class="w-full bg-orange-100 text-red-900 rounded-lg px-4 py-2 chela focus:outline-none focus:ring-2 focus:ring-red-800">
+          <option value="">Select department...</option>
+          <option *ngFor="let dept of departments" [value]="dept.code">{{ dept.name }}</option>
+        </select>
+      </div>
+      <button (click)="pullList()" [disabled]="isPulling || !selectedDeptCode"
+        class="bg-red-900 hover:bg-red-800 text-orange-100 chela py-2 px-6 rounded-lg transition duration-200 disabled:opacity-50">
+        {{ isPulling ? 'Pulling...' : 'Pull Order List' }}
+      </button>
+    </div>
+
+    <!-- Orders table -->
+    <div *ngIf="tableData.length > 0" class="overflow-x-auto">
+      <table class="w-full text-left border-collapse">
+        <thead>
+          <tr class="border-b-2 border-orange-200/30">
+            <th class="text-orange-100 barrio-regular py-3 pr-8">Name</th>
+            <th *ngFor="let cat of categories"
+              class="text-orange-100 barrio-regular py-3 pr-8">
+              {{ cat }}
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let row of tableData; let i = index"
+            [class.bg-white\/5]="i % 2 === 0"
+            class="border-b border-orange-200/10">
+            <td class="text-orange-100 chela py-3 pr-8 font-semibold">{{ row['name'] }}</td>
+            <td *ngFor="let cat of categories" class="text-orange-200 chela py-3 pr-8">
+              {{ row[cat] }}
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p *ngIf="!isPulling && currentRun && tableData.length === 0" class="text-orange-200 chela">
+      No orders found for this department.
+    </p>
+
+  </ng-container>
 
 </div>
