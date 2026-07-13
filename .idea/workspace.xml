@@ -6,10 +6,7 @@
   <component name="ChangeListManager">
     <list default="true" id="280adb57-4e9d-4f51-8da6-ad6538830a66" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/demo/controllers/EmployeeController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/demo/controllers/EmployeeController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/demo/services/EmployeeService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/demo/services/EmployeeService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/demo/controllers/EmployeeController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/example/demo/controllers/EmployeeController.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/demo/services/EmployeeService.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/example/demo/services/EmployeeService.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/demo/security/JwtAuthFilter.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/demo/security/JwtAuthFilter.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
