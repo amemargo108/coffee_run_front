@@ -6,6 +6,7 @@ import com.example.demo.entities.Employee;
 import com.example.demo.services.EmployeeService;
 import org.apache.coyote.Response;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -46,6 +47,12 @@ public class EmployeeController {
         employee.setPassword(request.getPassword());
         employee.setIs_admin(request.getIsAdmin());
         return ResponseEntity.ok(EmployeeResponse.from(employeeService.update(id, employee)));
+    }
+
+    @GetMapping
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<List<EmployeeResponse>> getAll() {
+        return ResponseEntity.ok(employeeService.getAll().stream().map(EmployeeResponse::from).toList());
     }
 
     @DeleteMapping("/{id}")

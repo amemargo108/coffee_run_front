@@ -1,5 +1,6 @@
 package com.example.demo.services;
 
+import com.example.demo.dtos.EmployeeResponse;
 import com.example.demo.entities.Department;
 import com.example.demo.entities.Employee;
 import com.example.demo.repository.EmployeeRepository;
@@ -25,6 +26,10 @@ public class EmployeeService {
 
     public List<Employee> getByDepartment(String departmentCode) {
         return employeeRepository.findByDepartmentCode(departmentCode);
+    }
+
+    public List<Employee> getAll() {
+        return employeeRepository.findAll();
     }
     //this allows the admins to set up employees initial password
     @PreAuthorize("hasRole('ADMIN')")
