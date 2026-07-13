@@ -66,6 +66,7 @@ public class DataInit implements CommandLineRunner {
         if (employeeRepository.count() == 0) {
             Department eng = departmentRepository.findByCode("ENG").orElse(null);
             Employee runner = new Employee();
+            runner.setName("Fake Runner");
             runner.setEmail("runner@coffeerun.com");
             runner.setPassword(passwordEncoder.encode("runnerpassword"));
             runner.setIs_admin(false);
@@ -73,6 +74,7 @@ public class DataInit implements CommandLineRunner {
             employeeRepository.save(runner);
 
             Employee schoolAdmin = new Employee();
+            schoolAdmin.setName("Fake Admin");
             schoolAdmin.setEmail("schooladmin@coffeerun.com");
             schoolAdmin.setPassword(passwordEncoder.encode(seedEmployeePassword));
             schoolAdmin.setIs_admin(true);
