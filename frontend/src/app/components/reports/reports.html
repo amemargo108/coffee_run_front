@@ -1,0 +1,96 @@
+<div class="dark-green min-h-screen p-8">
+
+  <div class="flex justify-between items-center mb-10">
+    <h1 class="text-4xl font-bold text-orange-100 barrio-regular">Reports</h1>
+    <button (click)="goBack()" class="text-orange-100 chela hover:text-orange-300 transition duration-200">
+      ← Back
+    </button>
+  </div>
+
+  <p *ngIf="errorMessage" class="text-red-300 chela mb-4">{{ errorMessage }}</p>
+
+  <div class="mid-green rounded-2xl p-8 mb-8 max-w-lg">
+    <form [formGroup]="filterForm" class="space-y-4">
+
+      <!-- Filters-->
+      <div class="flex flex-col gap-1">
+        <label class="text-orange-100 chela">Filter by</label>
+        <select formControlName="filterType"
+          class="bg-orange-100 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-red-800">
+          <option value="department">Department</option>
+          <option value="runner">Runner</option>
+          <option value="dateRange">Date Range</option>
+        </select>
+      </div>
+
+      <!-- Departments-->
+      <div *ngIf="filterForm.get('filterType')?.value === 'department'" class="flex flex-col gap-1">
+        <label class="text-orange-100 chela">Department</label>
+        <select formControlName="departmentCode"
+          class="bg-orange-100 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-red-800">
+          <option value="">Select department...</option>
+          <option *ngFor="let dept of departments" [value]="dept.code">{{ dept.name }}</option>
+        </select>
+      </div>
+
+      <!-- Runners -->
+      <div *ngIf="filterForm.get('filterType')?.value === 'runner'" class="flex flex-col gap-1">
+        <label class="text-orange-100 chela">Runner</label>
+        <select formControlName="runnerId"
+          class="bg-orange-100 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-red-800">
+          <option value="">Select runner...</option>
+          <option *ngFor="let emp of employees" [value]="emp.id">{{ emp.name }}</option>
+        </select>
+      </div>
+
+      <!--Dates -->
+      <ng-container *ngIf="filterForm.get('filterType')?.value === 'dateRange'">
+        <div class="flex flex-col gap-1">
+          <label class="text-orange-100 chela">Start Date</label>
+          <input formControlName="startDate" type="date"
+            class="bg-orange-100 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-red-800">
+        </div>
+        <div class="flex flex-col gap-1">
+          <label class="text-orange-100 chela">End Date</label>
+          <input formControlName="endDate" type="date"
+            class="bg-orange-100 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-red-800">
+        </div>
+      </ng-container>
+
+      <button type="button" (click)="search()" [disabled]="isLoading"
+        class="bg-red-900 hover:bg-red-800 text-orange-100 chela py-2 px-6 rounded-lg transition duration-200 disabled:opacity-50">
+        {{ isLoading ? 'Loading...' : 'Search' }}
+      </button>
+
+    </form>
+  </div>
+  <div *ngIf="runs.length > 0" class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
+    <div *ngFor="let run of runs"
+      (click)="selectRun(run)"
+      [class.ring-2]="selectedRun?.id === run.id"
+      [class.ring-orange-100]="selectedRun?.id === run.id"
+      class="mid-green rounded-xl p-6 shadow-lg cursor-pointer hover:opacity-90 transition duration-200">
+      <h3 class="coffee-red barrio-regular text-lg">{{ run.coffeeShopName }}</h3>
+      <p class="text-orange-100 chela text-sm">Runner: {{ run.runnerName }}</p>
+      <p class="text-orange-100 chela text-sm">Department: {{ run.departmentCode }}</p>
+      <p class="text-orange-100 chela text-sm">{{ formatDate(run.pulledAt) }}</p>
+    </div>
+  </div>
+
+  <div *ngIf="selectedRun">
+    <h2 class="text-orange-100 barrio-regular text-2xl mb-6">
+      {{ selectedRun.coffeeShopName }} — {{ formatDate(selectedRun.pulledAt) }}
+    </h2>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div *ngFor="let item of selectedRun.items" class="mid-green rounded-xl p-6 shadow-lg">
+        <h3 class="text-orange-100 barrio-regular text-lg mb-2">{{ item.employeeName }}</h3>
+        <p class="text-orange-100 chela">{{ item.orderSummary }}</p>
+      </div>
+    </div>
+  </div>
+
+  <p *ngIf="runs.length === 0 && !isLoading && !errorMessage" class="text-orange-200 chela">
+    No results yet. Use the filters above to search.
+  </p>
+
+</div>

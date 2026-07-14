@@ -1,0 +1,102 @@
+<div class="dark-green min-h-screen p-8">
+
+  <!-- Header -->
+  <div class="flex justify-between items-center mb-10">
+    <h1 class="text-4xl font-bold text-orange-100 barrio-regular">Employees</h1>
+    <div class="flex items-center gap-4">
+      <button (click)="goBack()" class="text-orange-100 chela hover:text-orange-300 transition duration-200">
+        ← Back
+      </button>
+      <button *ngIf="!showForm" (click)="openCreateForm()"
+        class="bg-red-900 hover:bg-red-800 text-orange-100 chela py-2 px-6 rounded-lg transition duration-200">
+        + Add Employee
+      </button>
+    </div>
+  </div>
+
+  <p *ngIf="successMessage" class="text-green-300 chela mb-4">{{ successMessage }}</p>
+  <p *ngIf="errorMessage" class="text-red-300 chela mb-4">{{ errorMessage }}</p>
+  <div *ngIf="showForm" class="mid-green rounded-2xl p-8 mb-8 max-w-lg">
+    <h2 class="text-orange-100 barrio-regular text-xl mb-6">
+      {{ selectedEmployee ? 'Edit Employee' : 'New Employee' }}
+    </h2>
+    <form [formGroup]="employeeForm" class="space-y-4">
+      <div class="flex flex-col gap-1">
+        <label class="text-orange-100 chela">Name</label>
+        <input formControlName="name" type="text"
+          class="bg-orange-100 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-red-800">
+      </div>
+      <div class="flex flex-col gap-1">
+        <label class="text-orange-100 chela">Email</label>
+        <input formControlName="email" type="email"
+          class="bg-orange-100 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-red-800">
+      </div>
+      <div class="flex flex-col gap-1">
+        <label class="text-orange-100 chela">
+          Password {{ selectedEmployee ? '(leave blank to keep current)' : '' }}
+        </label>
+        <input formControlName="password" type="password"
+          class="bg-orange-100 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-red-800">
+      </div>
+      <div class="flex flex-col gap-1">
+        <label class="text-orange-100 chela">Department</label>
+        <select formControlName="departmentCode"
+          class="bg-orange-100 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-red-800">
+          <option value="">Select department...</option>
+          <option *ngFor="let dept of departments" [value]="dept.code">{{ dept.name }}</option>
+        </select>
+      </div>
+      <div class="flex items-center gap-3">
+        <input formControlName="isAdmin" type="checkbox" id="isAdmin">
+        <label for="isAdmin" class="text-orange-100 chela">Admin</label>
+      </div>
+    </form>
+    <div class="flex gap-4 mt-6">
+      <button (click)="saveEmployee()"
+        class="bg-red-900 hover:bg-red-800 text-orange-100 chela py-2 px-6 rounded-lg transition duration-200">
+        {{ selectedEmployee ? 'Update' : 'Create' }}
+      </button>
+      <button (click)="cancel()"
+        class="bg-orange-100 hover:bg-orange-200 text-red-900 chela py-2 px-6 rounded-lg transition duration-200">
+        Cancel
+      </button>
+    </div>
+  </div>
+
+  <!-- search function-->
+  <div *ngIf="!showForm" class="mb-6 max-w-md">
+    <input [(ngModel)]="searchQuery" type="text" placeholder="Search by name, email or department..."
+      class="w-full bg-orange-100 rounded-lg px-4 py-2 chela focus:outline-none focus:ring-2 focus:ring-red-800">
+  </div>
+
+  <!-- employees -->
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <div *ngFor="let employee of filteredEmployees"
+      class="mid-green rounded-xl p-6 shadow-lg flex justify-between items-start">
+      <div>
+        <h3 class="coffee-red barrio-regular text-lg">{{ employee.name }}</h3>
+        <p class="text-orange-200 chela text-sm">{{ employee.email }}</p>
+        <p class="text-orange-200 chela text-sm">{{ employee.departmentCode }}</p>
+        <span *ngIf="employee.isAdmin"
+          class="inline-block mt-1 text-xs bg-red-900 text-orange-100 px-2 py-1 rounded-full chela">
+          Admin
+        </span>
+      </div>
+      <div class="flex flex-col gap-2">
+        <button (click)="openEditForm(employee)"
+          class="bg-orange-100 hover:bg-orange-200 text-red-900 chela py-1 px-4 rounded-lg text-sm transition duration-200">
+          Edit
+        </button>
+        <button (click)="deleteEmployee(employee.id)"
+          class="bg-red-900 hover:bg-red-800 text-orange-100 chela py-1 px-4 rounded-lg text-sm transition duration-200">
+          Delete
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <p *ngIf="filteredEmployees.length === 0 && !showForm" class="text-orange-200 chela mt-6">
+    {{ searchQuery ? 'No employees match your search.' : 'No employees yet.' }}
+  </p>
+
+</div>

@@ -1,0 +1,22 @@
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+
+import { AdminEmployeesComponent } from './admin-employees';
+
+describe('AdminEmployees', () => {
+  let component: AdminEmployeesComponent;
+  let fixture: ComponentFixture<AdminEmployeesComponent>;
+
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      imports: [AdminEmployeesComponent],
+    }).compileComponents();
+
+    fixture = TestBed.createComponent(AdminEmployeesComponent);
+    component = fixture.componentInstance;
+    await fixture.whenStable();
+  });
+
+  it('should create', () => {
+    expect(component).toBeTruthy();
+  });
+});

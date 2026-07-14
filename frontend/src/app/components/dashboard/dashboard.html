@@ -1,0 +1,48 @@
+<div class="dark-green min-h-screen p-8">
+
+  <!-- Header -->
+  <div class="flex justify-between items-center mb-10">
+    <h1 class="text-4xl font-bold text-orange-100 barrio-regular">COFFEERUN</h1>
+    <button (click)="logout()"
+      class="text-orange-100 chela hover:text-orange-300 transition duration-200">
+      Logout
+    </button>
+  </div>
+
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-3xl mx-auto">
+
+    <div (click)="navigate('/my-order')"
+      class="mid-green rounded-2xl p-8 cursor-pointer hover:opacity-90 transition duration-200 shadow-lg">
+      <h2 class="text-2xl font-bold coffee-red barrio-regular mb-2">My Order</h2>
+      <p class="text-orange-100 chela">View and edit your saved coffee order per shop.</p>
+    </div>
+
+    <div (click)="navigate('/runner')"
+      class="mid-green rounded-2xl p-8 cursor-pointer hover:opacity-90 transition duration-200 shadow-lg">
+      <h2 class="text-2xl font-bold coffee-red barrio-regular mb-2">Runner View</h2>
+      <p class="text-orange-100 chela">Pull the order list for your department.</p>
+    </div>
+
+    <!-- Admin only -->
+    <ng-container *ngIf="isAdmin">
+      <div (click)="navigate('/admin/employees')"
+        class="mid-green rounded-2xl p-8 cursor-pointer hover:opacity-90 transition duration-200 shadow-lg">
+        <h2 class="text-2xl font-bold coffee-red barrio-regular mb-2">Employees</h2>
+        <p class="text-orange-100 chela">Manage employee accounts and departments.</p>
+      </div>
+
+      <div (click)="navigate('/admin/coffee-shops')"
+        class="mid-green rounded-2xl p-8 cursor-pointer hover:opacity-90 transition duration-200 shadow-lg">
+        <h2 class="text-2xl font-bold coffee-red barrio-regular mb-2">Coffee Shops</h2>
+        <p class="text-orange-100 chela">Manage coffee shops and their menus.</p>
+      </div>
+
+      <div (click)="navigate('/reports')"
+        class="mid-green rounded-2xl p-8 cursor-pointer hover:opacity-90 transition duration-200 shadow-lg">
+        <h2 class="text-2xl font-bold coffee-red barrio-regular mb-2">Reports</h2>
+        <p class="text-orange-100 chela">View order run history and filter by runner, department, or date.</p>
+      </div>
+    </ng-container>
+
+  </div>
+</div>
