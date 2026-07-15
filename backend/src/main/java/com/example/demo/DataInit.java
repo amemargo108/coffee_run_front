@@ -58,8 +58,8 @@ public class DataInit implements CommandLineRunner {
             seedMenu(oldCity);
         }
         if (departmentRepository.count() == 0) {
-            jdbcTemplate.update("INSERT INTO departments (code, name) VALUES (?, ?)", "ENG", "Engineering");
-            jdbcTemplate.update ("INSERT INTO departments (code, name) VALUES (?, ?", "ACC", "Accounting");
+            jdbcTemplate.update("INSERT INTO department (code, name) VALUES (?, ?)", "ENG", "Engineering");
+            jdbcTemplate.update ("INSERT INTO department (code, name) VALUES (?, ?", "ACC", "Accounting");
         }
         if (employeeRepository.count() == 0) {
             Department eng = departmentRepository.findByCode("ENG").orElse(null);
