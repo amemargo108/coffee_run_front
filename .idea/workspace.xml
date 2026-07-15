@@ -5,8 +5,17 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="280adb57-4e9d-4f51-8da6-ad6538830a66" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/angular.json" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/angular.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/classes/com/example/demo/DataInit.class" beforeDir="false" afterPath="$PROJECT_DIR$/backend/target/classes/com/example/demo/DataInit.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/classes/com/example/demo/security/SecurityConfig.class" beforeDir="false" afterPath="$PROJECT_DIR$/backend/target/classes/com/example/demo/security/SecurityConfig.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/.angular/cache/21.2.17/coffee-app/.tsbuildinfo" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/.angular/cache/21.2.17/coffee-app/.tsbuildinfo" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/.angular/cache/21.2.17/coffee-app/angular-compiler.db-lock" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/.angular/cache/21.2.17/coffee-app/angular-compiler.db-lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/dist/coffee-app/browser/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/dist/coffee-app/browser/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/dist/coffee-app/browser/main-REQBELOO.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/app/components/admin-coffee-shops/admin-coffee-shops.html" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/app/components/admin-coffee-shops/admin-coffee-shops.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/app/components/admin-coffee-shops/admin-coffee-shops.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/app/components/admin-coffee-shops/admin-coffee-shops.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/app/services/CoffeeShopService.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/app/services/CoffeeShopService.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -67,6 +76,7 @@
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
     "RunOnceActivity.git.unshallow": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
     "Spring Boot.DemoApplication.executor": "Run",
     "git-widget-placeholder": "main",
     "kotlin-language-version-configured": "true",

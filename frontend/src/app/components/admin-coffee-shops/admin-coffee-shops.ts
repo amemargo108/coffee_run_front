@@ -20,6 +20,7 @@ export class AdminCoffeeShopsComponent implements OnInit {
   shopForm: FormGroup;
   showMenuForm = false;
   showShopForm = false;
+  showEditShopForm = false;
   errorMessage: string = '';
   successMessage: string = '';
   newCategory = '';
@@ -57,6 +58,14 @@ export class AdminCoffeeShopsComponent implements OnInit {
     this.showShopForm = true;
   }
 
+  openEditShop(): void {
+      this.shopForm.patchValue({
+          name: this.selectedShop!.name,
+          location: this.selectedShop!.location
+          });
+      this.showEditShopForm = true;
+    }
+
   saveShop(): void {
     if(this.shopForm.invalid) return;
     this,this.coffeeShopService.create(this.shopForm.value).subscribe({
@@ -68,6 +77,19 @@ export class AdminCoffeeShopsComponent implements OnInit {
       error: () => this.errorMessage = "This coffee shop could not be saved."
     });
   }
+
+  updateShop(): void {
+      if (this.shopForm.invalid) return;
+      this.coffeeShopService.update(this.selectedShop!.id, this.shopForm.value).subscribe({
+          next: () => {
+              this.successMessage = "This coffee shop has been updated.";
+              this.showEditShopForm = false;
+              this.selectedShop = { ...this.selectedShop!, ...this.shopForm.value };
+              this.changeDetect.detectChanges();
+              },
+          error: () => this.errorMessage = "This coffee shop could not be updated."
+              });
+      }
 
   selectShop(shop: CoffeeShop): void {
     this.selectedShop = shop;

@@ -25,6 +25,8 @@ export class CoffeeShopService {
     addMenuOption(coffeeShopId: string, option: any): Observable<MenuOption> {
         return this.http.post<MenuOption>(`${this.apiUrl}/coffee-shops/${coffeeShopId}/menu`, option);
     }
+    update(id: string, data:any):Observable<CoffeeShop> {
+        return this.http.put<CoffeeShop>(`${this.apiUrl}/coffee-shops/${id}`, data)};
 
     create(shop: any): Observable<CoffeeShop> {
         return this.http.post<CoffeeShop>(`${this.apiUrl}/coffee-shops`, shop);
