@@ -14,7 +14,6 @@ import java.util.UUID;
 
 @Entity
 @Table(name = "employees")
-// JPA @Data automatically generates getters/setters/equals/hashCode/and toString for each field
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
