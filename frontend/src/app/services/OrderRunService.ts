@@ -2,12 +2,13 @@ import { Inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { OrderRun } from '../models/order-run.model';
+import { environment } from '../../environments/environment';
 
 @Injectable({
     providedIn: 'root'
 })
 export class OrderRunService {
-    private apiUrl = "http://localhost:8080";
+    private apiUrl = environment.apiUrl;
     constructor(private http: HttpClient) {}
 
     pullOrderList(runnerId: string, coffeeShopId: string, departmentCode: string): Observable<OrderRun> {

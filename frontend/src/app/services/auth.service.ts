@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { Observable, tap } from 'rxjs';
+import { environment } from '../../environments/environment';
 
 @Injectable({
     providedIn: 'root'
@@ -9,7 +10,7 @@ import { Observable, tap } from 'rxjs';
 
 export class AuthService {
 
-    private apiUrl = 'http://localhost:8080';
+    private apiUrl = environment.apiUrl;;
     private tokenKey = 'jwt_token';
 
     constructor(private http: HttpClient, private router: Router) {}
