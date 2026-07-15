@@ -8,6 +8,9 @@ import com.example.demo.repository.CoffeeShopRepository;
 import com.example.demo.repository.DepartmentRepository;
 import com.example.demo.repository.EmployeeRepository;
 import com.example.demo.repository.MenuOptionRepository;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -31,10 +34,14 @@ public class DataInit implements CommandLineRunner {
         this.passwordEncoder = passwordEncoder;
     }
 
+    @PersistenceContext
+    private EntityManager entityManager;
+
     @Value("${seed.employee.password}")
     private String seedEmployeePassword;
 
     @Override
+    @Transactional
     public void run(String... args) {
         if (coffeeShopRepository.count() == 0) {
             //add coffeshops
@@ -55,12 +62,12 @@ public class DataInit implements CommandLineRunner {
             Department eng = new Department();
             eng.setCode("ENG");
             eng.setName("Engineering");
-            departmentRepository.save(eng);
+            entityManager.persist(eng);
 
             Department acc = new Department();
             acc.setName("Accounting");
             acc.setCode("ACC");
-            departmentRepository.save(acc);
+            entityManager.persist(acc);
         }
         if (employeeRepository.count() == 0) {
             Department eng = departmentRepository.findByCode("ENG").orElse(null);
