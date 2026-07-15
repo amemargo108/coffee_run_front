@@ -10,9 +10,10 @@ import com.example.demo.repository.EmployeeRepository;
 import com.example.demo.repository.MenuOptionRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
-import jakarta.transaction.Transactional;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
@@ -34,14 +35,13 @@ public class DataInit implements CommandLineRunner {
         this.passwordEncoder = passwordEncoder;
     }
 
-    @PersistenceContext
-    private EntityManager entityManager;
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
 
     @Value("${seed.employee.password}")
     private String seedEmployeePassword;
 
     @Override
-    @Transactional
     public void run(String... args) {
         if (coffeeShopRepository.count() == 0) {
             //add coffeshops
@@ -58,16 +58,8 @@ public class DataInit implements CommandLineRunner {
             seedMenu(oldCity);
         }
         if (departmentRepository.count() == 0) {
-            // add departments
-            Department eng = new Department();
-            eng.setCode("ENG");
-            eng.setName("Engineering");
-            entityManager.persist(eng);
-
-            Department acc = new Department();
-            acc.setName("Accounting");
-            acc.setCode("ACC");
-            entityManager.persist(acc);
+            jdbcTemplate.update("INSERT INTO departments (code, name) VALUES (?, ?)", "ENG", "Engineering");
+            jdbcTemplate.update ("INSERT INTO departments (code, name) VALUES (?, ?", "ACC", "Accounting");
         }
         if (employeeRepository.count() == 0) {
             Department eng = departmentRepository.findByCode("ENG").orElse(null);
